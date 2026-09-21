@@ -1,0 +1,184 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "category": "english",
+      "type": "true_false",
+      "question": "'Cat' nghĩa là con mèo?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 2,
+      "category": "math",
+      "type": "true_false",
+      "question": "1 + 1 = 2?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 3,
+      "category": "english",
+      "type": "true_false",
+      "question": "'Dog' nghĩa là con chó?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 4,
+      "category": "math",
+      "type": "true_false",
+      "question": "5 - 2 = 3?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 5,
+      "category": "english",
+      "type": "true_false",
+      "question": "'Apple' nghĩa là quả chuối?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 6,
+      "category": "vietnamese",
+      "type": "true_false",
+      "question": "'Mèo' viết đúng chính tả là 'Mèo' (không phải 'Méo')?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 7,
+      "category": "math",
+      "type": "true_false",
+      "question": "3 x 2 = 6?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 0,
+      "difficulty": 3
+    },
+    {
+      "id": 8,
+      "category": "english",
+      "type": "true_false",
+      "question": "'Sun' nghĩa là mặt trăng?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 1,
+      "difficulty": 3
+    },
+    {
+      "id": 9,
+      "category": "math",
+      "type": "true_false",
+      "question": "10 - 4 = 6?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 0,
+      "difficulty": 3
+    },
+    {
+      "id": 10,
+      "category": "english",
+      "type": "true_false",
+      "question": "'Book' nghĩa là quyển sách?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 0,
+      "difficulty": 4
+    },
+    {
+      "id": 11,
+      "category": "vietnamese",
+      "type": "true_false",
+      "question": "'Trời' và 'chời' viết giống nhau về nghĩa?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 1,
+      "difficulty": 4
+    },
+    {
+      "id": 12,
+      "category": "math",
+      "type": "true_false",
+      "question": "4 x 3 = 12?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 0,
+      "difficulty": 4
+    },
+    {
+      "id": 13,
+      "category": "english",
+      "type": "true_false",
+      "question": "'Happy' nghĩa là buồn?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 1,
+      "difficulty": 5
+    },
+    {
+      "id": 14,
+      "category": "math",
+      "type": "true_false",
+      "question": "15 : 3 = 5?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 0,
+      "difficulty": 5
+    },
+    {
+      "id": 15,
+      "category": "english",
+      "type": "true_false",
+      "question": "'Elephant' là tên một loài chim?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 1,
+      "difficulty": 6
+    },
+    {
+      "id": 16,
+      "category": "math",
+      "type": "true_false",
+      "question": "7 x 6 = 42?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 0,
+      "difficulty": 6
+    },
+    {
+      "id": 17,
+      "category": "vietnamese",
+      "type": "true_false",
+      "question": "'Chăm chỉ' và 'lười biếng' là hai từ trái nghĩa?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 0,
+      "difficulty": 6
+    },
+    {
+      "id": 18,
+      "category": "math",
+      "type": "true_false",
+      "question": "9 x 8 = 72?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 0,
+      "difficulty": 7
+    },
+    {
+      "id": 19,
+      "category": "english",
+      "type": "true_false",
+      "question": "'Yesterday' là từ chỉ thời gian trong tương lai?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 1,
+      "difficulty": 8
+    },
+    {
+      "id": 20,
+      "category": "math",
+      "type": "true_false",
+      "question": "(6 + 4) x 2 = 20?",
+      "options": ["Đúng", "Sai"],
+      "correctAnswer": 0,
+      "difficulty": 9
+    }
+  ]
+}

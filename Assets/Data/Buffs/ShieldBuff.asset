@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcddf040df8eb894e9d6f0a2fe2a9a84, type: 3}
+  m_Name: ShieldBuff
+  m_EditorClassIdentifier: 
+  buffDuration: 3
+  icon: {fileID: 21300000, guid: 58d859a751e511b43acaf1c7bed8a9cc, type: 3}
+  maxStack: 3
+  buffEffectPrefab: {fileID: 6424583148328831481, guid: d2ffbc8b168cdf74a9dbb7c6c1cfdf2f, type: 3}
