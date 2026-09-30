@@ -208,12 +208,12 @@ public class DisplayQuestion : MonoBehaviour
 
             if (SpawnEffect.Instance != null)
                 SpawnEffect.Instance.PlayCorrectEffect(player);
-            
+
             //if (BuffImidiately.Instance != null)
             //{
             //    //BuffImidiately.Instance.BuffSpeed();
             //}
-
+            PlayerScoreManager.Instance?.AddCoinScore(20);
             HideQuestionUI();
         }
         else

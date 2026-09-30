@@ -14,7 +14,8 @@ public class CoinItem : MonoBehaviour
             CoinCaculator.Instance.UpdateTotalCoin(coinValue);
 
             Destroy(gameObject);
-            Debug.Log("Coin collected! Total coins: " + CoinCaculator.Instance.GetTotalCoin());
+            PlayerScoreManager.Instance?.AddCoinScore(coinValue);
+            
         }
     }
 

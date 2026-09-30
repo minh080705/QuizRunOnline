@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -35,7 +36,8 @@ public class Speedometer : MonoBehaviour
         if (stats == null) return; // chưa có player thì chưa làm gì
 
         GetPlayerVelocity();
-        TextMeshPro.text = playerVelocity + "km/h";
+
+        TextMeshPro.text = Math.Round(playerVelocity, 2) + " km/h";
     }
     public void GetPlayerVelocity()
     {
