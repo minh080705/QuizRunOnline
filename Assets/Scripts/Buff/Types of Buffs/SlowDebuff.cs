@@ -1,15 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-[System.Serializable]
-public class SlowDebuff
+
+[CreateAssetMenu(fileName = "SlowDebuff", menuName = "Buffs/Slow Debuff")]
+public class SlowDebuff : Buff
 {
+    public float speedMultiplier = 0.8f;
 
-    [Header("Settings")]
-    [SerializeField] public float speedMultiplier = 0.8f;
-    [SerializeField] public float buffDuration = 3f;
+    public override void OnFirstApplied(PlayerStats player, BuffContext context)
+    {
+        context.Set("baseSideSpeed", player.sideSpeed);
+    }
 
-    [Header("Effect")]
-    [SerializeField] public GameObject buffEffectPrefab;    
+    public override void OnStackChanged(PlayerStats player, int currentStack, BuffContext context)
+    {
+        float baseSideSpeed = context.Get("baseSideSpeed", player.sideSpeed);
 
+        if (currentStack == 0)
+        {
+            player.RemoveSpeedMultiplier(this);
+            player.sideSpeed = baseSideSpeed;
+            return;
+        }
+
+        float multiplier = Mathf.Pow(speedMultiplier, currentStack);
+        player.SetSpeedMultiplier(this, multiplier);
+        player.sideSpeed = baseSideSpeed * multiplier;
+    }
 }

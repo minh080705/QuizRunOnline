@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 7548429728201637263}
   - component: {fileID: -2928320117201817946}
   - component: {fileID: 7434910941825321503}
+  - component: {fileID: -4109005207118685717}
   m_Layer: 0
   m_Name: character
   m_TagString: Player
@@ -191,10 +192,12 @@ MonoBehaviour:
   jumpForce: 5
   isGrounded: 1
   baseSpeed: 15
-  accelerationRate: 0.05
-  maxSpeed: 10000
+  accelerationRate: 0.3
+  maxSpeed: 1000
+  buffMultiplier: 1
   isDead: 0
   canMove: 0
+  hasFinishedRace: 0
 --- !u!114 &8159021769834891947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -415,6 +418,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b516b7b5accf9948b67cbbbf9c14ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-4109005207118685717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218935437837961677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25cc1d81cbfc61742bae32bddbae5429, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coastDuration: 2
+  playerStats: {fileID: 1428434738204372398}
+  collidersToDisableOnFinish:
+  - {fileID: 6664392264524385675}
+  characterVisual: {fileID: 7514829177251599417}
 --- !u!1 &2662258610342259386
 GameObject:
   m_ObjectHideFlags: 0

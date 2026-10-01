@@ -38,7 +38,7 @@ public class SpawnEffect : MonoBehaviour
     {
         if (player == null)
         {
-            Debug.LogWarning("PlayCorrectEffect: player null.");
+          
             return;
         }
 
@@ -53,7 +53,7 @@ public class SpawnEffect : MonoBehaviour
     {
         if (player == null)
         {
-            Debug.LogWarning("PlayWrongEffect: player null.");
+            
             return;
         }
 

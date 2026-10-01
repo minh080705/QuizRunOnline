@@ -3,6 +3,7 @@
 // - Load dữ liệu câu hỏi từ JSON (chỉ load 1 lần)
 // - Hiển thị / ẩn UI câu hỏi (dùng chung cho mọi chướng ngại vật)
 // - Kiểm tra đáp án và gọi hiệu ứng / buff tương ứng
+// - Tính điểm quiz qua PlayerScoreManager
 //
 // Mỗi chướng ngại vật chỉ cần gắn QuestionTrigger.cs (nhẹ, không chứa UI/JSON)
 // và gọi QuestionManager.Instance.ShowQuestion(trigger, player) khi va chạm.
@@ -28,11 +29,18 @@ public class QuestionManager : MonoBehaviour
     [SerializeField] private Button answerButton2;
     [SerializeField] private Button HideAndShowQuestionButton;
 
+    [Header("Buff/Debuff References")]
+    [SerializeField] private SpeedBuff speedBuffAsset;
+    [SerializeField] private SlowDebuff slowDebuffAsset;
     // =========================================================
     // QUESTION DATA
     // =========================================================
     [Header("Question")]
     [SerializeField] private TextAsset questionJson;
+
+    [Header("Quiz Scoring")]
+    [Tooltip("Thời gian giới hạn cho mỗi câu hỏi (giây) - dùng để tính time bonus.")]
+    [SerializeField] private float questionTimeLimit = 10f;
 
     private QuestionData[] questions;
 
@@ -41,6 +49,10 @@ public class QuestionManager : MonoBehaviour
     // =========================================================
     private bool isAnswered = false;
     private int currentCorrectAnswer;
+
+    // Lưu lại để dựng AnswerResult khi CheckAnswer() được gọi
+    private int currentDifficulty;
+    private float questionStartTime;
 
     private bool isQuestionAvailable = false; // Có câu hỏi đang chờ trả lời không
     private bool isQuestionVisible = false;   // UI câu hỏi đang hiện hay đang tạm ẩn
@@ -68,7 +80,7 @@ public class QuestionManager : MonoBehaviour
 
         if (questionJson == null)
         {
-            Debug.LogError("Không tìm thấy questions.json trong Assets/Resources/");
+
             return;
         }
 
@@ -81,7 +93,7 @@ public class QuestionManager : MonoBehaviour
         }
 
         questions = questionList.questions;
-        Debug.Log($"Đã load {questions.Length} câu hỏi.");
+
     }
 
     private void Start()
@@ -142,6 +154,10 @@ public class QuestionManager : MonoBehaviour
 
         currentCorrectAnswer = question.correctAnswer;
 
+        // Lưu thông tin cần thiết để tính điểm khi CheckAnswer() được gọi
+        currentDifficulty = question.difficulty;
+        questionStartTime = Time.time;
+
         isQuestionAvailable = true;
         HideAndShowButton();
 
@@ -186,17 +202,26 @@ public class QuestionManager : MonoBehaviour
 
         isAnswered = true;
 
-        if (selectedAnswer == currentCorrectAnswer)
+        bool isCorrect = selectedAnswer == currentCorrectAnswer;
+
+        // ---- Đóng gói kết quả trả lời + gửi cho PlayerScoreManager ----
+        // Gọi 1 LẦN DUY NHẤT cho cả 2 trường hợp đúng/sai: AddQuizScore() tự lo
+        // việc cộng điểm (nếu đúng) và reset streak (nếu sai), không cần if ở đây.
+        float timeTaken = Time.time - questionStartTime;
+        AnswerResult result = new AnswerResult(isCorrect, timeTaken, questionTimeLimit, currentDifficulty);
+        PlayerScoreManager.Instance?.AddQuizScore(result);
+
+        PlayerStats playerstats = player != null ? player.GetComponent<PlayerStats>() : null;
+
+        if (isCorrect)
         {
             Debug.Log("Đúng!");
 
             if (SpawnEffect.Instance != null)
                 SpawnEffect.Instance.PlayCorrectEffect(player);
 
-            if (BuffImidiately.Instance != null)
-            {
-                //BuffImidiately.Instance.BuffSpeed();
-            }
+            if (playerstats != null && speedBuffAsset != null)
+                speedBuffAsset.ApplyBuff(playerstats);
 
             currentTrigger?.OnAnsweredCorrectly();
         }
@@ -207,11 +232,8 @@ public class QuestionManager : MonoBehaviour
             if (SpawnEffect.Instance != null)
                 SpawnEffect.Instance.PlayWrongEffect(player);
 
-            if (BuffImidiately.Instance != null)
-            {
-                Debug.Log("Debuff");
-                BuffImidiately.Instance.SlowDebuff();
-            }
+            if (playerstats != null && slowDebuffAsset != null)
+                slowDebuffAsset.ApplyBuff(playerstats);
 
             currentTrigger?.OnAnsweredWrong();
         }

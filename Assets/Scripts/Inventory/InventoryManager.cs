@@ -30,7 +30,7 @@ public class InventoryManager : NetworkBehaviour
         if (!Object.HasStateAuthority) return;
         if (newItem == null) return;
 
-        Debug.Log($"[InventoryManager] AddItem gọi trên instance ID={GetInstanceID()}, item={newItem.name}, HasStateAuthority={Object.HasStateAuthority}");
+        
 
         Buff overflowItem = slots[maxSlots - 1];
 
@@ -42,7 +42,7 @@ public class InventoryManager : NetworkBehaviour
         slots[0] = newItem;
 
         string slotsLog = string.Join(", ", System.Array.ConvertAll(slots, s => s != null ? s.name : "null"));
-        Debug.Log($"[InventoryManager] Sau khi add, slots hiện tại: [{slotsLog}]");
+        
 
         if (overflowItem != null)
         {

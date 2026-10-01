@@ -34,7 +34,7 @@
       "question": "5 - 2 = 3?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 0,
-      "difficulty": 2
+      "difficulty": 1
     },
     {
       "id": 5,
@@ -43,7 +43,7 @@
       "question": "'Apple' nghĩa là quả chuối?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 1,
-      "difficulty": 2
+      "difficulty": 1
     },
     {
       "id": 6,
@@ -52,7 +52,7 @@
       "question": "'Mèo' viết đúng chính tả là 'Mèo' (không phải 'Méo')?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 0,
-      "difficulty": 2
+      "difficulty": 1
     },
     {
       "id": 7,
@@ -61,7 +61,7 @@
       "question": "3 x 2 = 6?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 0,
-      "difficulty": 3
+      "difficulty": 1
     },
     {
       "id": 8,
@@ -70,7 +70,7 @@
       "question": "'Sun' nghĩa là mặt trăng?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 1,
-      "difficulty": 3
+      "difficulty": 1
     },
     {
       "id": 9,
@@ -79,7 +79,7 @@
       "question": "10 - 4 = 6?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 0,
-      "difficulty": 3
+      "difficulty": 1
     },
     {
       "id": 10,
@@ -88,7 +88,7 @@
       "question": "'Book' nghĩa là quyển sách?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 0,
-      "difficulty": 4
+      "difficulty": 2
     },
     {
       "id": 11,
@@ -97,7 +97,7 @@
       "question": "'Trời' và 'chời' viết giống nhau về nghĩa?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 1,
-      "difficulty": 4
+      "difficulty": 1
     },
     {
       "id": 12,
@@ -106,7 +106,7 @@
       "question": "4 x 3 = 12?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 0,
-      "difficulty": 4
+      "difficulty": 2
     },
     {
       "id": 13,
@@ -115,7 +115,7 @@
       "question": "'Happy' nghĩa là buồn?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 1,
-      "difficulty": 5
+      "difficulty": 2
     },
     {
       "id": 14,
@@ -124,7 +124,7 @@
       "question": "15 : 3 = 5?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 0,
-      "difficulty": 5
+      "difficulty": 2
     },
     {
       "id": 15,
@@ -133,7 +133,7 @@
       "question": "'Elephant' là tên một loài chim?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 1,
-      "difficulty": 6
+      "difficulty": 2
     },
     {
       "id": 16,
@@ -142,7 +142,7 @@
       "question": "7 x 6 = 42?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 0,
-      "difficulty": 6
+      "difficulty": 2
     },
     {
       "id": 17,
@@ -151,7 +151,7 @@
       "question": "'Chăm chỉ' và 'lười biếng' là hai từ trái nghĩa?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 0,
-      "difficulty": 6
+      "difficulty": 2
     },
     {
       "id": 18,
@@ -160,7 +160,7 @@
       "question": "9 x 8 = 72?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 0,
-      "difficulty": 7
+      "difficulty": 2
     },
     {
       "id": 19,
@@ -169,7 +169,7 @@
       "question": "'Yesterday' là từ chỉ thời gian trong tương lai?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 1,
-      "difficulty": 8
+      "difficulty": 2
     },
     {
       "id": 20,
@@ -178,7 +178,7 @@
       "question": "(6 + 4) x 2 = 20?",
       "options": ["Đúng", "Sai"],
       "correctAnswer": 0,
-      "difficulty": 9
+      "difficulty": 2
     }
   ]
 }

@@ -4,6 +4,19 @@ using UnityEngine;
 using TMPro;
 using Fusion;
 
+/// <summary>
+/// Quản lý thông báo dạng hàng đợi (network + local), hiển thị tuần tự.
+///
+/// SỬA QUAN TRỌNG: bỏ hoàn toàn notificationPanel.SetActive(true/false).
+/// Trước đây Awake() gọi SetActive(false) lên panel - nếu panel này VÔ TÌNH
+/// là cha (hoặc chính) của các component khác dùng pattern "subscribe event
+/// trong Start()/OnEnable()" (ví dụ AddPointsNotification), việc tắt panel
+/// sẽ chặn luôn Start()/OnEnable() của các component con đó, khiến chúng
+/// không bao giờ nhận được event dù logic hoàn toàn đúng.
+///
+/// Panel giờ LUÔN active, chỉ ẩn/hiện qua CanvasGroup.alpha (coroutine Fade
+/// sẵn có đã tự lo việc này) - an toàn để dùng chung parent với các UI khác.
+/// </summary>
 public class UI_Notification : NetworkBehaviour
 {
     public static UI_Notification Instance { get; private set; }
@@ -23,7 +36,9 @@ public class UI_Notification : NetworkBehaviour
     void Awake()
     {
         if (Instance == null) Instance = this;
-        notificationPanel.SetActive(false);
+
+        // Không SetActive(false) panel nữa - chỉ ẩn qua alpha.
+        // Panel luôn active, an toàn cho các component con khác dùng chung.
         canvasGroup.alpha = 0f;
     }
 
@@ -70,13 +85,10 @@ public class UI_Notification : NetworkBehaviour
         {
             string message = messageQueue.Dequeue();
             notificationText.text = message;
-            notificationPanel.SetActive(true);
 
             yield return StartCoroutine(Fade(0f, 1f, fadeDuration));
             yield return new WaitForSeconds(displayDuration);
             yield return StartCoroutine(Fade(1f, 0f, fadeDuration));
-
-            notificationPanel.SetActive(false);
         }
 
         isShowing = false;
