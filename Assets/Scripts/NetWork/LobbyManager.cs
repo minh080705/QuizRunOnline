@@ -18,19 +18,77 @@ public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
 
     void Awake()
     {
+        // LobbyManager sống qua các scene (RaceScene cần Runner). Quay lại LobbyScene mà bản cũ còn thì bỏ bản mới.
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
 
+    void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
+    }
+
     async void Start()
     {
+        // Bản trùng đã bị Destroy trong Awake: không tạo runner thứ hai.
+        if (Instance != this) return;
+
+        // Chưa đăng nhập: AuthGate đang đẩy về AccountScene, không kết nối và không giữ lại manager này.
+        if (AuthGate.Redirecting)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        await ConnectToLobbyAsync();
+    }
+
+    /// <summary>Tạo runner mới và vào session lobby để nhận danh sách phòng.</summary>
+    private async Task ConnectToLobbyAsync()
+    {
         _runner = Instantiate(runnerPrefab);
-        DontDestroyOnLoad(_runner.gameObject); // ← thêm dòng này
+        DontDestroyOnLoad(_runner.gameObject);
         _runner.AddCallbacks(this);
 
         var result = await _runner.JoinSessionLobby(SessionLobby.ClientServer);
         if (!result.Ok)
             Debug.LogError($"Join Lobby thất bại: {result.ShutdownReason}");
+    }
+
+    private async Task ShutdownRunnerAsync()
+    {
+        if (_runner == null) return;
+
+        NetworkRunner old = _runner;
+        _runner = null;
+
+        old.RemoveCallbacks(this); // tránh OnPlayerLeft/thông báo "đối thủ thoát" cho chính mình
+        if (old.IsRunning)
+            await old.Shutdown();
+
+        if (old != null) Destroy(old.gameObject);
+    }
+
+    /// <summary>Rời phòng/trận hiện tại và quay lại sảnh (thấy danh sách phòng như lúc mới vào Lobby).</summary>
+    public async Task LeaveRoomAsync()
+    {
+        await ShutdownRunnerAsync();
+        PlayerContext.Instance?.Clear(); // bỏ tham chiếu player của ván vừa rời
+        CurrentSessions = new List<SessionInfo>();
+        await ConnectToLobbyAsync();
+    }
+
+    /// <summary>Dọn toàn bộ kết nối rồi tự hủy (dùng khi quay về AccountScene). Lobby mới sẽ tạo LobbyManager sạch.</summary>
+    public async Task TeardownAsync()
+    {
+        await ShutdownRunnerAsync();
+        Destroy(gameObject);
     }
 
     // Thêm property public để RaceScenePlayerSpawner lấy runner an toàn hơn FindObjectOfType
@@ -59,7 +117,7 @@ public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         Debug.Log($"Player {player} đã rời phòng.");
-        UI_Notification.Instance.ShowNetworkMessage("1 đối thủ đã thoát trận đấu!");
+        UI_Notification.Instance?.ShowNetworkMessage("1 đối thủ đã thoát trận đấu!");
         // Có thể thêm logic: tự động thắng, quay về menu, v.v.
     }
     public async Task<bool> JoinRoom(string roomName)

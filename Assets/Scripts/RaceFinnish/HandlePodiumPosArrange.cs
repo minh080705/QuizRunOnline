@@ -24,6 +24,12 @@ public class HandlePodiumPosArrange : MonoBehaviour
     /// </summary>
     public event Action<Transform, Transform, Transform> OnLocalPlayerReachedPodium;
 
+    /// <summary>
+    /// Bắn ra khi routine sắp xếp bục của máy này đã xong, Ở MỌI NHÁNH: lên bục xong, hoặc không có chỗ trên bục
+    /// (hạng ≥ 4), hoặc không tìm thấy nhân vật. Khác OnLocalPlayerReachedPodium (chỉ bắn cho người lên bục).
+    /// </summary>
+    public event Action OnArrangeCompleted;
+
     private Transform[] podium;
     private Coroutine arrangeRoutine;
 
@@ -34,18 +40,40 @@ public class HandlePodiumPosArrange : MonoBehaviour
 
     private void OnEnable()
     {
-        FinishLine.OnRaceFinish += HandleRaceFinish;
+        RaceResultManager.OnRaceFinish += HandleRaceFinish;
     }
 
     private void OnDisable()
     {
-        FinishLine.OnRaceFinish -= HandleRaceFinish;
+        RaceResultManager.OnRaceFinish -= HandleRaceFinish;
 
         if (arrangeRoutine != null)
         {
             StopCoroutine(arrangeRoutine);
             arrangeRoutine = null;
         }
+    }
+
+    /// <summary>
+    /// Vị trí này đang ở bục nào: 0 = nhất, 1 = nhì, 2 = ba, -1 = không ở bục nào (cách mọi bục quá radius).
+    /// Đọc Transform trực tiếp mỗi lần gọi nên vẫn đúng khi podium bị dời tới vạch đích.
+    /// </summary>
+    public int GetPodiumSlot(Vector3 position, float radius)
+    {
+        Transform[] slots = { championPos, runnerupPos, thirdplacePos };
+        int best = -1;
+        float bestSqr = radius * radius;
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i] == null) continue;
+            float sqr = (slots[i].position - position).sqrMagnitude;
+            if (sqr <= bestSqr)
+            {
+                bestSqr = sqr;
+                best = i;
+            }
+        }
+        return best;
     }
 
     private void HandleRaceFinish()
@@ -64,7 +92,7 @@ public class HandlePodiumPosArrange : MonoBehaviour
         if (rank < 0 || rank >= podium.Length || podium[rank] == null)
         {
             Debug.LogWarning("[Podium] không có vị trí bục cho rank này, bỏ qua");
-            arrangeRoutine = null;
+            FinishArrange();
             yield break;
         }
 
@@ -72,7 +100,7 @@ public class HandlePodiumPosArrange : MonoBehaviour
         if (no == null)
         {
             Debug.LogWarning("[Podium] không tìm thấy nhân vật local");
-            arrangeRoutine = null;
+            FinishArrange();
             yield break;
         }
 
@@ -84,7 +112,14 @@ public class HandlePodiumPosArrange : MonoBehaviour
         yield return new WaitForSeconds(1f);
         OnLocalPlayerReachedPodium?.Invoke(championPos, runnerupPos, thirdplacePos);
 
+        FinishArrange();
+    }
+
+    // Kết thúc routine ở mọi nhánh: báo cho UI tổng kết (nó tự đợi thêm vài giây rồi hiện nút "Chạm để tiếp tục").
+    private void FinishArrange()
+    {
         arrangeRoutine = null;
+        OnArrangeCompleted?.Invoke();
     }
 
     private IEnumerator WaitUntilAtRest(Transform root)

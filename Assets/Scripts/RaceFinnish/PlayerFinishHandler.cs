@@ -29,6 +29,9 @@ public class PlayerFinishHandler : MonoBehaviour
   
     private bool hasFinished = false;
 
+    /// <summary>true khi nhân vật đã được ghi nhận về đích (PlayerLives dùng để không hồi sinh nữa).</summary>
+    public bool HasFinished => hasFinished;
+
     /// <summary>
     /// Gọi khi player được gán thứ hạng về đích (từ FinishLine).
     /// </summary>

@@ -1,0 +1,163 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 335430d0861b6bb44bbe71ddaf4daf64, type: 3}
+  m_Name: SpawnProfile
+  m_EditorClassIdentifier: 
+  obstacles:
+  - prefab: {fileID: 1197311757702504449, guid: adde141523d233e489738db484020497, type: 3}
+    kind: 0
+    length: 3
+  - prefab: {fileID: 6779906609306507486, guid: eb03dfcb82a2ad94c9dd44f538311deb, type: 3}
+    kind: 1
+    length: 2
+  coinPrefab: {fileID: 9109795891433891009, guid: cd35cbcf7a0339448aaefc57702bb378, type: 3}
+  buffPrefabs:
+  - {fileID: 1455734309099242881, guid: fe67d49472d658a43ba352b47e0a48d4, type: 3}
+  - {fileID: 8647870385273488654, guid: a7a6a9339a65ba24dbf58563de6e6fc3, type: 3}
+  questionPrefabs:
+  - {fileID: 7810271911876395923, guid: 05c46c84560e10f488c951729675a830, type: 3}
+  - {fileID: 7810271911876395923, guid: 3f7e1d7e71a7bef41bc7f995e66d547f, type: 3}
+  laneX:
+  - -2.5
+  - 0
+  - 2.5
+  rowGapSeconds:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 2.2
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.9
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  doubleLaneChance:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  firstRowOffset: 40
+  minRowGap: 8
+  doubleUnlock: 0.1
+  staggeredUnlock: 0.25
+  lowWallUnlock: 0.2
+  overheadUnlock: 0.35
+  mixedUnlock: 0.5
+  staggeredWeight: 0.6
+  lowWallWeight: 0.6
+  overheadWeight: 0.6
+  mixedWeight: 0.5
+  coinChance:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.7
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  coinSpacing: 7
+  minLineCoins: 6
+  maxLineCoins: 14
+  waveMinCoins: 8
+  waveMaxCoins: 14
+  waveAmplitude: 2
+  waveCycles: 1
+  zigzagMinCoins: 5
+  zigzagMaxCoins: 8
+  lineWeight: 1
+  waveWeight: 0.7
+  zigzagWeight: 0.5
+  coinPadding: 3
+  minFillLength: 8
+  maxArcLength: 40
+  buffEveryMeters: 250
+  questionEveryMeters:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 180
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 110
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  laneChangeTime: 0.25
+  reactionMargin: 0.35
+  jumpHeight: 2
+  jumpDuration: 0.6
+  slideDuration: 1
+  fallbackBaseSpeed: 10
+  fallbackAcceleration: 0.3
+  fallbackMaxSpeed: 300

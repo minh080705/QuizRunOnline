@@ -35,13 +35,20 @@ public class RacePlayersRegistry : MonoBehaviour
         players.Remove(player);
     }
 
+    // Chỉ đọc cờ mạng khi object còn hợp lệ (tránh đọc state của object đang bị hủy).
+    private static bool IsEliminated(PlayerStats p)
+    {
+        return p.Object != null && p.Object.IsValid && p.IsEliminated;
+    }
+
     public PlayerStats GetLeadingPlayer()
     {
         PlayerStats leading = null;
         float maxZ = float.MinValue;
         foreach (var p in players)
         {
-            if (p == null) continue;
+            // Người đã hết mạng nằm lại trên đường: không tính là người dẫn đầu (dùng để sinh vật cản/vạch đích).
+            if (p == null || IsEliminated(p)) continue;
             if (p.transform.position.z > maxZ)
             {
                 maxZ = p.transform.position.z;
@@ -57,7 +64,8 @@ public class RacePlayersRegistry : MonoBehaviour
         float minZ = float.MaxValue;
         foreach (var p in players)
         {
-            if (p == null) continue;
+            // Người đã bị loại nằm lại phía sau sẽ khiến vật cản không bao giờ được dọn, nên bỏ qua.
+            if (p == null || IsEliminated(p)) continue;
             if (p.transform.position.z < minZ)
             {
                 minZ = p.transform.position.z;

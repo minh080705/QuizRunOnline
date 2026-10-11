@@ -1,33 +1,37 @@
-﻿using System;
-using System.Linq;
 using Fusion;
 using UnityEngine;
 
 /// <summary>
-/// NetworkObject đặt tại vạch đích. Mỗi máy tự phát hiện va chạm của ĐÚNG
-/// player do máy đó điều khiển, rồi gửi RPC báo cho StateAuthority.
-/// StateAuthority chỉ làm trọng tài: xử lý báo cáo theo thứ tự đến nơi.
-/// Tự gán hạng cuối cho người còn lại duy nhất, và xử lý khi có người rời phòng.
+/// NetworkObject đặt tại vạch đích (spawn bởi FinnishLineSpawner khi người dẫn đầu tới gần).
+/// Mỗi máy tự phát hiện va chạm của ĐÚNG player do máy đó điều khiển, rồi báo cho RaceResultManager
+/// (scene object luôn tồn tại) - việc xếp hạng nằm ở đó vì người chơi có thể bị loại trước khi vạch đích xuất hiện.
 /// </summary>
-public class FinishLine : NetworkBehaviour, IPlayerLeft
+public class FinishLine : NetworkBehaviour
 {
-    // Capacity phải >= số người chơi tối đa game hỗ trợ.
-    [Networked, Capacity(8)]
-    private NetworkLinkedList<PlayerRef> FinishOrder => default;
+    // Vị trí/hướng lúc spawn. Runner.Spawn(position, rotation) chỉ áp dụng trên máy đang spawn khi object
+    // không có NetworkTransform; các máy khác sẽ tạo bản sao ở vị trí mặc định của prefab. Gửi qua [Networked]
+    // (đặt trong onBeforeSpawned) để mọi máy đặt vạch đích đúng chỗ, cả hình ảnh lẫn collider.
+    [Networked] private Vector3 SpawnPosition { get; set; }
+    [Networked] private Quaternion SpawnRotation { get; set; }
+    [Networked] private NetworkBool HasSpawnPose { get; set; }
 
-    [Networked] public int TotalPlayers { get; private set; }
-
-    /// Bắn ra trên MỌI máy sau khi toàn bộ người chơi đã được gán thứ hạng.
-    public static event Action OnRaceFinish;
+    /// <summary>Gọi từ onBeforeSpawned của Runner.Spawn, trước khi object được replicate cho các máy khác.</summary>
+    public void SetSpawnPose(Vector3 position, Quaternion rotation)
+    {
+        SpawnPosition = position;
+        SpawnRotation = rotation;
+        HasSpawnPose = true;
+    }
 
     public override void Spawned()
     {
-        if (Object.HasStateAuthority)
-        {
-            // Snapshot số người chơi lúc vạch đích xuất hiện. Nếu có người rời
-            // giữa chừng thì PlayerLeft() bên dưới sẽ trừ đi.
-            TotalPlayers = Runner.ActivePlayers.Count();
-        }
+        // Chạy trên MỌI máy: đưa vạch đích về đúng vị trí đã định.
+        if (HasSpawnPose)
+            Object.transform.SetPositionAndRotation(SpawnPosition, SpawnRotation);
+
+        // Podium (trong RaceScene) được thả vào FinnishLineSpawner: dời tới sát vạch đích vừa xuất hiện.
+        if (FinnishLineSpawner.Instance != null)
+            FinnishLineSpawner.Instance.PlacePodium(Object.transform.position);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -44,104 +48,15 @@ public class FinishLine : NetworkBehaviour, IPlayerLeft
         if (!playerObject.HasStateAuthority)
             return;
 
-        RPC_ReportFinish();
-    }
-
-    /// <summary>
-    /// Lấy người gửi từ chính RPC (info.Source) thay vì tin tham số client gửi,
-    /// nên không máy nào khai báo thay người khác được.
-    /// </summary>
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    private void RPC_ReportFinish(RpcInfo info = default)
-    {
-        TryFinishPlayer(info.Source);
-    }
-
-    private void TryFinishPlayer(PlayerRef player)
-    {
-        if (FinishOrder.Contains(player))
+        if (RaceResultManager.Instance == null)
+        {
+            Debug.LogError("[FinishLine] Không có RaceResultManager trong scene: thêm component này vào object FinishLineSpawner.");
             return;
-
-        int rank = FinishOrder.Count + 1;
-        FinishOrder.Add(player);
-
-        RPC_NotifyPlayerFinished(player, rank);
-
-        if (FinishOrder.Count == TotalPlayers)
-        {
-            RPC_NotifyRaceFinished();
-        }
-        else
-        {
-            CheckAutoFinishLastPlayer();
-        }
-    }
-
-    /// <summary>
-    /// Chỉ còn đúng 1 người chưa về đích -> tự gán hạng cuối cho họ.
-    /// exclude: người vừa rời phòng (phòng trường hợp họ còn nằm trong ActivePlayers).
-    /// </summary>
-    private void CheckAutoFinishLastPlayer(PlayerRef exclude = default)
-    {
-        int remaining = TotalPlayers - FinishOrder.Count;
-        if (remaining != 1)
-            return;
-
-        foreach (PlayerRef p in Runner.ActivePlayers)
-        {
-            if (p == exclude) continue;
-
-            if (!FinishOrder.Contains(p))
-            {
-                TryFinishPlayer(p);
-                break;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Có người rời phòng khi chưa về đích -> không chờ họ nữa, tránh cuộc đua treo.
-    /// </summary>
-    public void PlayerLeft(PlayerRef player)
-    {
-        if (!Object.HasStateAuthority) return;
-        if (FinishOrder.Contains(player)) return; // đã có hạng rồi thì không ảnh hưởng
-
-        TotalPlayers--;
-
-        if (FinishOrder.Count == TotalPlayers)
-            RPC_NotifyRaceFinished();
-        else
-            CheckAutoFinishLastPlayer(player);
-    }
-
-    /// <summary>
-    /// Broadcast tới TẤT CẢ client: máy đang spectator cũng cần biết ai vừa
-    /// về đích để loại họ khỏi danh sách theo dõi.
-    /// </summary>
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_NotifyPlayerFinished(PlayerRef player, int rank)
-    {
-        if (Runner.LocalPlayer == player)
-        {
-            PlayerScoreManager.Instance?.AddRankBonus(rank);
-
-            // Lấy PlayerFinishHandler của nhân vật local qua PlayerContext
-            Transform me = PlayerContext.Instance != null ? PlayerContext.Instance.LocalPlayer : null;
-            if (me != null)
-            {
-                var handler = me.GetComponentInChildren<PlayerFinishHandler>();
-                if (handler != null) handler.OnFinishedRace(rank);
-            }
         }
 
-        RaceSpectatorManager.Instance?.MarkPlayerFinished(player);
-    }
+        // Hiệu ứng chúc mừng chỉ phát trên máy của chính người về đích.
+        SpawnEffect.Instance?.PlayCorrectEffect(playerObject.gameObject);
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_NotifyRaceFinished()
-    {
-        Debug.Log("[FinishLine] Toàn bộ người chơi đã về đích - đua kết thúc.");
-        OnRaceFinish?.Invoke();
+        RaceResultManager.Instance.ReportFinish();
     }
 }

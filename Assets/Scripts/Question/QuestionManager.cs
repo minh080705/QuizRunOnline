@@ -39,8 +39,11 @@ public class QuestionManager : MonoBehaviour
     [SerializeField] private TextAsset questionJson;
 
     [Header("Quiz Scoring")]
-    [Tooltip("Thời gian giới hạn cho mỗi câu hỏi (giây) - dùng để tính time bonus.")]
-    [SerializeField] private float questionTimeLimit = 10f;
+    [Tooltip("Thời gian tối đa để trả lời mỗi câu (giây). Hết giờ coi như trả lời sai. Trả lời càng sớm càng được nhiều điểm thưởng tốc độ.")]
+    [SerializeField] private float answerTimeLimit = 5f;
+
+    [Tooltip("Tùy chọn: text hiện số giây còn lại. Đặt bên trong ScreenQuestion để tự ẩn/hiện theo câu hỏi.")]
+    [SerializeField] private TextMeshProUGUI timerText;
 
     private QuestionData[] questions;
 
@@ -108,6 +111,24 @@ public class QuestionManager : MonoBehaviour
         answerButton2.onClick.AddListener(() => CheckAnswer(1));
     }
 
+    // Đếm giờ: chạy cả khi người chơi tạm ẩn câu hỏi bằng nút toggle. Hết giờ -> tính là trả lời sai.
+    private void Update()
+    {
+        if (!isQuestionAvailable || isAnswered)
+            return;
+
+        float remaining = answerTimeLimit - (Time.time - questionStartTime);
+
+        if (timerText != null)
+            timerText.text = Mathf.Max(0, Mathf.CeilToInt(remaining)).ToString();
+
+        if (remaining <= 0f)
+        {
+            Debug.Log("Hết giờ trả lời!");
+            CheckAnswer(-1); // -1 không khớp đáp án nào -> sai
+        }
+    }
+
     // =========================================================
     // ĐƯỢC GỌI TỪ QuestionTrigger KHI PLAYER VA CHẠM
     // =========================================================
@@ -161,6 +182,11 @@ public class QuestionManager : MonoBehaviour
         isQuestionAvailable = true;
         HideAndShowButton();
 
+        // Dừng hẳn nhân vật trong lúc trả lời (tốc độ cũ được PlayerStats lưu lại).
+        PlayerStats frozenStats = playerObj != null ? playerObj.GetComponent<PlayerStats>() : null;
+        if (frozenStats != null)
+            frozenStats.FreezeForQuestion();
+
         return true;
     }
 
@@ -207,11 +233,15 @@ public class QuestionManager : MonoBehaviour
         // ---- Đóng gói kết quả trả lời + gửi cho PlayerScoreManager ----
         // Gọi 1 LẦN DUY NHẤT cho cả 2 trường hợp đúng/sai: AddQuizScore() tự lo
         // việc cộng điểm (nếu đúng) và reset streak (nếu sai), không cần if ở đây.
-        float timeTaken = Time.time - questionStartTime;
-        AnswerResult result = new AnswerResult(isCorrect, timeTaken, questionTimeLimit, currentDifficulty);
+        float timeTaken = Mathf.Min(Time.time - questionStartTime, answerTimeLimit);
+        AnswerResult result = new AnswerResult(isCorrect, timeTaken, answerTimeLimit, currentDifficulty);
         PlayerScoreManager.Instance?.AddQuizScore(result);
 
         PlayerStats playerstats = player != null ? player.GetComponent<PlayerStats>() : null;
+
+        // Chạy lại với tốc độ cũ TRƯỚC khi áp buff/debuff (buff snapshot sideSpeed lúc áp dụng).
+        if (playerstats != null)
+            playerstats.UnfreezeAfterQuestion();
 
         if (isCorrect)
         {
@@ -220,7 +250,8 @@ public class QuestionManager : MonoBehaviour
             if (SpawnEffect.Instance != null)
                 SpawnEffect.Instance.PlayCorrectEffect(player);
 
-            if (playerstats != null && speedBuffAsset != null)
+            // Không áp buff lên nhân vật đang chết: buff chụp sideSpeed lúc áp dụng (đang = 0) và sẽ khôi phục sai về 0.
+            if (playerstats != null && !playerstats.isDead && speedBuffAsset != null)
                 speedBuffAsset.ApplyBuff(playerstats);
 
             currentTrigger?.OnAnsweredCorrectly();
@@ -232,7 +263,7 @@ public class QuestionManager : MonoBehaviour
             if (SpawnEffect.Instance != null)
                 SpawnEffect.Instance.PlayWrongEffect(player);
 
-            if (playerstats != null && slowDebuffAsset != null)
+            if (playerstats != null && !playerstats.isDead && slowDebuffAsset != null)
                 slowDebuffAsset.ApplyBuff(playerstats);
 
             currentTrigger?.OnAnsweredWrong();

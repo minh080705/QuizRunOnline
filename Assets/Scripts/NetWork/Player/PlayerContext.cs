@@ -28,6 +28,17 @@ public class PlayerContext : MonoBehaviour
 
         OnLocalPlayerReady?.Invoke(player);
     }
+    /// <summary>
+    /// PlayerContext sống cùng LobbyManager (qua các scene) nên phải bỏ tham chiếu player cũ
+    /// khi rời trận, nếu không script khác sẽ đọc phải player đã bị hủy của ván trước.
+    /// </summary>
+    public void Clear()
+    {
+        LocalPlayer = null;
+        LocalStats = null;
+        LocalInventory = null;
+    }
+
     void OnDestroy()
     {
         if (Instance == this) Instance = null;

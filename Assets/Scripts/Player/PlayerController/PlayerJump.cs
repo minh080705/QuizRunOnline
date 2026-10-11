@@ -1,4 +1,5 @@
 ﻿using System;
+using Fusion;
 using UnityEngine;
 
 public class PlayerJump : MonoBehaviour
@@ -25,6 +26,21 @@ public class PlayerJump : MonoBehaviour
     private float jumpTimer;
     private float groundY;
     private float lastJumpPressTime = -999f;
+    private NetworkObject netObject;
+    private PlayerNetworkState netState;
+    private PlayerStats playerStats;
+
+    // Chỉ nhân vật do máy này sở hữu mới nhận input và tự nhảy; proxy lấy vị trí/animation từ mạng.
+    // Chưa spawn (không có mạng) thì vẫn cho chạy như cũ.
+    private bool IsAuthority => netObject == null || !netObject.IsValid || netObject.HasStateAuthority;
+
+    private void Awake()
+    {
+        netObject = GetComponentInParent<NetworkObject>();
+        netState = GetComponentInParent<PlayerNetworkState>();
+        playerStats = GetComponentInParent<PlayerStats>();
+    }
+
     private void Start()
     {
         groundY = transform.position.y;
@@ -50,6 +66,7 @@ public class PlayerJump : MonoBehaviour
 
     private void HandleJumpPressed()
     {
+        if (!IsAuthority) return;
         lastJumpPressTime = Time.time;
         if (playerSlide != null && playerSlide.IsSliding) return; // chặn nhảy khi đang trượt
         StartJump();
@@ -57,6 +74,7 @@ public class PlayerJump : MonoBehaviour
     }
     private void HandleSlideEnded()
     {
+        if (!IsAuthority) return;
         bool hasRecentJumpInput = Time.time - lastJumpPressTime <= jumpBufferTime;
         if (hasRecentJumpInput && !IsJumping)
         {
@@ -66,16 +84,19 @@ public class PlayerJump : MonoBehaviour
 
     private void Update()
     {
+        if (!IsAuthority) return;
         UpdateJump();
     }
 
     public void StartJump()
     {
         if (IsJumping) return;
+        if (playerStats != null && playerStats.isFrozenByQuestion) return; // đang dừng để trả lời câu hỏi
         IsJumping = true;
         jumpTimer = 0f;
         collisionController.SetJump();
         playerAnimation.TriggerJump();
+        if (netState != null) netState.NotifyJump();
     }
 
     private void UpdateJump()

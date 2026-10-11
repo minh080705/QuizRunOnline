@@ -25,7 +25,7 @@ public class RoomManager : NetworkBehaviour
             for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
             {
                 string path = SceneUtility.GetScenePathByBuildIndex(i);
-                if (path.Contains("RaceScene"))
+                if (path.Contains(SceneNames.Race))
                 {
                     Runner.LoadScene(SceneRef.FromIndex(i));
                     return;

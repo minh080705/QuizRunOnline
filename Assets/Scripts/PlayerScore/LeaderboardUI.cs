@@ -56,9 +56,8 @@ public class LeaderboardUI : MonoBehaviour
         // Đổ dữ liệu vào từng row theo thứ hạng đã sắp xếp sẵn
         for (int i = 0; i < entries.Count; i++)
         {
-            // Demo đặt tên tạm theo PlayerId - thay bằng hệ thống nickname
-            // thực tế nếu game đã có (ví dụ tra cứu từ 1 PlayerDataManager riêng).
-            string displayName = $"Player {entries[i].Player.PlayerId}";
+            // Tên người chơi (lấy từ hồ sơ đăng nhập) do LeaderboardManager đồng bộ cùng điểm.
+            string displayName = LeaderboardManager.Instance.GetName(entries[i].Player);
             activeRows[i].SetData(rank: i + 1, displayName: displayName, score: entries[i].Score);
         }
     }

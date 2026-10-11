@@ -2,182 +2,1202 @@
   "questions": [
     {
       "id": 1,
-      "category": "english",
-      "type": "true_false",
-      "question": "'Cat' nghĩa là con mèo?",
-      "options": ["Đúng", "Sai"],
-      "correctAnswer": 0,
-      "difficulty": 1
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "7 x 4 = ?",
+      "options": [
+        "26",
+        "28"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
     },
     {
       "id": 2,
       "category": "math",
-      "type": "true_false",
-      "question": "1 + 1 = 2?",
-      "options": ["Đúng", "Sai"],
+      "type": "multiple_choice",
+      "question": "(9 + 3) x 5 = ?",
+      "options": [
+        "60",
+        "62"
+      ],
       "correctAnswer": 0,
-      "difficulty": 1
+      "difficulty": 2
     },
     {
       "id": 3,
       "category": "english",
-      "type": "true_false",
-      "question": "'Dog' nghĩa là con chó?",
-      "options": ["Đúng", "Sai"],
+      "type": "multiple_choice",
+      "question": "'Milk' nghĩa là gì?",
+      "options": [
+        "Sữa",
+        "Bánh mì"
+      ],
       "correctAnswer": 0,
       "difficulty": 1
     },
     {
       "id": 4,
-      "category": "math",
-      "type": "true_false",
-      "question": "5 - 2 = 3?",
-      "options": ["Đúng", "Sai"],
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Số nhiều của 'child' là?",
+      "options": [
+        "children",
+        "childs"
+      ],
       "correctAnswer": 0,
-      "difficulty": 1
+      "difficulty": 2
     },
     {
       "id": 5,
       "category": "english",
-      "type": "true_false",
-      "question": "'Apple' nghĩa là quả chuối?",
-      "options": ["Đúng", "Sai"],
+      "type": "multiple_choice",
+      "question": "Từ nào là một loại trái cây?",
+      "options": [
+        "potato",
+        "banana"
+      ],
       "correctAnswer": 1,
-      "difficulty": 1
+      "difficulty": 2
     },
     {
       "id": 6,
-      "category": "vietnamese",
-      "type": "true_false",
-      "question": "'Mèo' viết đúng chính tả là 'Mèo' (không phải 'Méo')?",
-      "options": ["Đúng", "Sai"],
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Quá khứ của 'go' là?",
+      "options": [
+        "went",
+        "goed"
+      ],
       "correctAnswer": 0,
-      "difficulty": 1
+      "difficulty": 2
     },
     {
       "id": 7,
       "category": "math",
-      "type": "true_false",
-      "question": "3 x 2 = 6?",
-      "options": ["Đúng", "Sai"],
-      "correctAnswer": 0,
+      "type": "multiple_choice",
+      "question": "17 - 2 = ?",
+      "options": [
+        "25",
+        "15"
+      ],
+      "correctAnswer": 1,
       "difficulty": 1
     },
     {
       "id": 8,
       "category": "english",
-      "type": "true_false",
-      "question": "'Sun' nghĩa là mặt trăng?",
-      "options": ["Đúng", "Sai"],
-      "correctAnswer": 1,
-      "difficulty": 1
-    },
-    {
-      "id": 9,
-      "category": "math",
-      "type": "true_false",
-      "question": "10 - 4 = 6?",
-      "options": ["Đúng", "Sai"],
-      "correctAnswer": 0,
-      "difficulty": 1
-    },
-    {
-      "id": 10,
-      "category": "english",
-      "type": "true_false",
-      "question": "'Book' nghĩa là quyển sách?",
-      "options": ["Đúng", "Sai"],
+      "type": "multiple_choice",
+      "question": "Chọn từ đúng: We ___ to school by bus.",
+      "options": [
+        "go",
+        "goes"
+      ],
       "correctAnswer": 0,
       "difficulty": 2
     },
     {
-      "id": 11,
-      "category": "vietnamese",
-      "type": "true_false",
-      "question": "'Trời' và 'chời' viết giống nhau về nghĩa?",
-      "options": ["Đúng", "Sai"],
+      "id": 9,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Blue' là màu gì?",
+      "options": [
+        "Màu vàng",
+        "Màu xanh dương"
+      ],
       "correctAnswer": 1,
       "difficulty": 1
     },
     {
+      "id": 10,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "3 + 6 = ?",
+      "options": [
+        "7",
+        "9"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 11,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "25 : 5 = ?",
+      "options": [
+        "5",
+        "6"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
       "id": 12,
       "category": "math",
-      "type": "true_false",
-      "question": "4 x 3 = 12?",
-      "options": ["Đúng", "Sai"],
-      "correctAnswer": 0,
+      "type": "multiple_choice",
+      "question": "(9 + 3) x 4 = ?",
+      "options": [
+        "47",
+        "48"
+      ],
+      "correctAnswer": 1,
       "difficulty": 2
     },
     {
       "id": 13,
       "category": "english",
-      "type": "true_false",
-      "question": "'Happy' nghĩa là buồn?",
-      "options": ["Đúng", "Sai"],
+      "type": "multiple_choice",
+      "question": "Chọn từ đúng: I ___ a cat.",
+      "options": [
+        "has",
+        "have"
+      ],
       "correctAnswer": 1,
       "difficulty": 2
     },
     {
       "id": 14,
       "category": "math",
-      "type": "true_false",
-      "question": "15 : 3 = 5?",
-      "options": ["Đúng", "Sai"],
-      "correctAnswer": 0,
-      "difficulty": 2
-    },
-    {
-      "id": 15,
-      "category": "english",
-      "type": "true_false",
-      "question": "'Elephant' là tên một loài chim?",
-      "options": ["Đúng", "Sai"],
+      "type": "multiple_choice",
+      "question": "45 : 9 = ?",
+      "options": [
+        "4",
+        "5"
+      ],
       "correctAnswer": 1,
       "difficulty": 2
     },
     {
+      "id": 15,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "5 + 8 = ?",
+      "options": [
+        "13",
+        "12"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
       "id": 16,
       "category": "math",
-      "type": "true_false",
-      "question": "7 x 6 = 42?",
-      "options": ["Đúng", "Sai"],
+      "type": "multiple_choice",
+      "question": "25 - 6 = ?",
+      "options": [
+        "19",
+        "18"
+      ],
       "correctAnswer": 0,
-      "difficulty": 2
+      "difficulty": 1
     },
     {
       "id": 17,
-      "category": "vietnamese",
-      "type": "true_false",
-      "question": "'Chăm chỉ' và 'lười biếng' là hai từ trái nghĩa?",
-      "options": ["Đúng", "Sai"],
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Chọn từ đúng: There ___ three books on the table.",
+      "options": [
+        "are",
+        "is"
+      ],
       "correctAnswer": 0,
       "difficulty": 2
     },
     {
       "id": 18,
-      "category": "math",
-      "type": "true_false",
-      "question": "9 x 8 = 72?",
-      "options": ["Đúng", "Sai"],
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Sun' nghĩa là gì?",
+      "options": [
+        "Mặt trời",
+        "Mặt trăng"
+      ],
       "correctAnswer": 0,
-      "difficulty": 2
+      "difficulty": 1
     },
     {
       "id": 19,
       "category": "english",
-      "type": "true_false",
-      "question": "'Yesterday' là từ chỉ thời gian trong tương lai?",
-      "options": ["Đúng", "Sai"],
+      "type": "multiple_choice",
+      "question": "'Teacher' nghĩa là gì?",
+      "options": [
+        "Bác sĩ",
+        "Giáo viên"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 20,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Yesterday' nghĩa là gì?",
+      "options": [
+        "Hôm qua",
+        "Ngày mai"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 21,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "27 - 9 = ?",
+      "options": [
+        "18",
+        "19"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 22,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Big' nghĩa là gì?",
+      "options": [
+        "To, lớn",
+        "Nhỏ bé"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 23,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Hungry' nghĩa là gì?",
+      "options": [
+        "Đói",
+        "No"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 24,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "9 x 6 - 3 = ?",
+      "options": [
+        "51",
+        "52"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 25,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Chọn từ đúng: She ___ a student.",
+      "options": [
+        "is",
+        "are"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 26,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Cat' nghĩa là gì?",
+      "options": [
+        "Con chó",
+        "Con mèo"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 27,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "7 + 7 = ?",
+      "options": [
+        "15",
+        "14"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 28,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Mother' nghĩa là gì?",
+      "options": [
+        "Mẹ",
+        "Bố"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 29,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "5 + 11 = ?",
+      "options": [
+        "18",
+        "16"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 30,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'House' nghĩa là gì?",
+      "options": [
+        "Ngôi nhà",
+        "Chiếc xe"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 31,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Friend' nghĩa là gì?",
+      "options": [
+        "Bạn bè",
+        "Hàng xóm"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 32,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "18 - 3 = ?",
+      "options": [
+        "17",
+        "15"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 33,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Chọn từ đúng: They ___ my friends.",
+      "options": [
+        "is",
+        "are"
+      ],
       "correctAnswer": 1,
       "difficulty": 2
     },
     {
-      "id": 20,
+      "id": 34,
       "category": "math",
-      "type": "true_false",
-      "question": "(6 + 4) x 2 = 20?",
-      "options": ["Đúng", "Sai"],
+      "type": "multiple_choice",
+      "question": "26 - 10 = ?",
+      "options": [
+        "16",
+        "17"
+      ],
       "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 35,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "9 x 3 = ?",
+      "options": [
+        "18",
+        "27"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 36,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "24 - 12 = ?",
+      "options": [
+        "2",
+        "12"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 37,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "8 x 5 = ?",
+      "options": [
+        "40",
+        "50"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 38,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "9 + 2 = ?",
+      "options": [
+        "21",
+        "11"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 39,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Số nhiều của 'box' là?",
+      "options": [
+        "boxs",
+        "boxes"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 40,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "6 : 2 = ?",
+      "options": [
+        "2",
+        "3"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 41,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "6 x 4 = ?",
+      "options": [
+        "34",
+        "24"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 42,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "8 x 8 = ?",
+      "options": [
+        "74",
+        "64"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 43,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "2 + 11 = ?",
+      "options": [
+        "3",
+        "13"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 44,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "3 x 3 - 1 = ?",
+      "options": [
+        "10",
+        "8"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 45,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Số nhiều của 'book' là?",
+      "options": [
+        "bookes",
+        "books"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 46,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Eat' nghĩa là gì?",
+      "options": [
+        "Ăn",
+        "Uống"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 47,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "(6 + 9) x 3 = ?",
+      "options": [
+        "45",
+        "44"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 48,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Quá khứ của 'have' là?",
+      "options": [
+        "had",
+        "haved"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 49,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "4 x 9 = ?",
+      "options": [
+        "32",
+        "36"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 50,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "8 x 6 = ?",
+      "options": [
+        "49",
+        "48"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 51,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Dog' nghĩa là gì?",
+      "options": [
+        "Con gà",
+        "Con chó"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 52,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Moon' nghĩa là gì?",
+      "options": [
+        "Ngôi sao",
+        "Mặt trăng"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 53,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Run' nghĩa là gì?",
+      "options": [
+        "Chạy",
+        "Nhảy"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 54,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Water' nghĩa là gì?",
+      "options": [
+        "Lửa",
+        "Nước"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 55,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "(8 + 2) x 4 = ?",
+      "options": [
+        "40",
+        "38"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 56,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "11 - 8 = ?",
+      "options": [
+        "3",
+        "13"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 57,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Quá khứ của 'play' là?",
+      "options": [
+        "plaied",
+        "played"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 58,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "10 + 8 = ?",
+      "options": [
+        "18",
+        "20"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 59,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "10 + 15 = ?",
+      "options": [
+        "35",
+        "25"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 60,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Red' là màu gì?",
+      "options": [
+        "Màu đỏ",
+        "Màu xanh lá"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 61,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "24 - 6 = ?",
+      "options": [
+        "19",
+        "18"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 62,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "11 + 9 = ?",
+      "options": [
+        "18",
+        "20"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 63,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Fish' nghĩa là gì?",
+      "options": [
+        "Con cá",
+        "Con voi"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 64,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "10 + 12 = ?",
+      "options": [
+        "12",
+        "22"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 65,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "7 x 7 - 2 = ?",
+      "options": [
+        "49",
+        "47"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 66,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "7 x 6 = ?",
+      "options": [
+        "42",
+        "32"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 67,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Hot' nghĩa là gì?",
+      "options": [
+        "Nóng",
+        "Lạnh"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 68,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Chọn từ đúng: He ___ football every day.",
+      "options": [
+        "plays",
+        "play"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 69,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "9 x 4 - 4 = ?",
+      "options": [
+        "22",
+        "32"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 70,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Apple' nghĩa là gì?",
+      "options": [
+        "Quả chuối",
+        "Quả táo"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 71,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Từ trái nghĩa của 'happy' là?",
+      "options": [
+        "sad",
+        "glad"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 72,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "48 : 6 = ?",
+      "options": [
+        "10",
+        "8"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 73,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Quá khứ của 'eat' là?",
+      "options": [
+        "ate",
+        "eated"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 74,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "21 - 3 = ?",
+      "options": [
+        "18",
+        "19"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 75,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Book' nghĩa là gì?",
+      "options": [
+        "Quyển sách",
+        "Cái bút"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 76,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "9 + 12 = ?",
+      "options": [
+        "21",
+        "20"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 77,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "81 : 9 = ?",
+      "options": [
+        "9",
+        "19"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 78,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Happy' nghĩa là gì?",
+      "options": [
+        "Vui vẻ",
+        "Buồn bã"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 79,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Từ trái nghĩa của 'hot' là?",
+      "options": [
+        "sweet",
+        "cold"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 80,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "22 - 4 = ?",
+      "options": [
+        "28",
+        "18"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 81,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Từ trái nghĩa của 'big' là?",
+      "options": [
+        "small",
+        "long"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 82,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Bird' nghĩa là gì?",
+      "options": [
+        "Con cá",
+        "Con chim"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 83,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "8 x 7 = ?",
+      "options": [
+        "64",
+        "56"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 84,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Library' nghĩa là gì?",
+      "options": [
+        "Hiệu sách",
+        "Thư viện"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 85,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "30 - 13 = ?",
+      "options": [
+        "17",
+        "19"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 86,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Tree' nghĩa là gì?",
+      "options": [
+        "Bông hoa",
+        "Cái cây"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 87,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Night' nghĩa là gì?",
+      "options": [
+        "Ban ngày",
+        "Ban đêm"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 88,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Three' là số mấy?",
+      "options": [
+        "Số 3",
+        "Số 5"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 89,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Elephant' nghĩa là gì?",
+      "options": [
+        "Con hươu cao cổ",
+        "Con voi"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 90,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "63 : 9 = ?",
+      "options": [
+        "9",
+        "7"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 2
+    },
+    {
+      "id": 91,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "3 + 7 = ?",
+      "options": [
+        "12",
+        "10"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 92,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "19 - 7 = ?",
+      "options": [
+        "12",
+        "13"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 93,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "(7 + 3) x 3 = ?",
+      "options": [
+        "30",
+        "32"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 94,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Số nhiều của 'mouse' là?",
+      "options": [
+        "mice",
+        "mouses"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 95,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Quá khứ của 'see' là?",
+      "options": [
+        "saw",
+        "seed"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 96,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "9 x 6 = ?",
+      "options": [
+        "54",
+        "63"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 97,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'School' nghĩa là gì?",
+      "options": [
+        "Trường học",
+        "Bệnh viện"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 1
+    },
+    {
+      "id": 98,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "'Beautiful' nghĩa là gì?",
+      "options": [
+        "Xinh đẹp",
+        "Xấu xí"
+      ],
+      "correctAnswer": 0,
+      "difficulty": 2
+    },
+    {
+      "id": 99,
+      "category": "math",
+      "type": "multiple_choice",
+      "question": "14 + 14 = ?",
+      "options": [
+        "29",
+        "28"
+      ],
+      "correctAnswer": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 100,
+      "category": "english",
+      "type": "multiple_choice",
+      "question": "Số nhiều của 'foot' là?",
+      "options": [
+        "foots",
+        "feet"
+      ],
+      "correctAnswer": 1,
       "difficulty": 2
     }
   ]
