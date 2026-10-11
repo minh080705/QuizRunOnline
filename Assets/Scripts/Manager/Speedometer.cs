@@ -13,6 +13,15 @@ public class Speedometer : MonoBehaviour
     void OnEnable()
     {
         PlayerContext.OnLocalPlayerReady += HandlePlayerReady;
+
+        // Bắt đầu mỗi ván từ 0, chờ player mới đăng ký (không dùng lại stats của ván trước).
+        stats = null;
+        playerVelocity = 0f;
+        if (TextMeshPro != null) TextMeshPro.text = "0 km/h";
+
+        // Player có thể đã đăng ký trước khi Speedometer bật (lỡ sự kiện): lấy luôn nếu còn sống.
+        if (PlayerContext.Instance != null && PlayerContext.Instance.LocalStats != null)
+            stats = PlayerContext.Instance.LocalStats;
     }
 
     void OnDisable()

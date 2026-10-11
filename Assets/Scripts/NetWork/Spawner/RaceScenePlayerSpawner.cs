@@ -19,8 +19,10 @@ public class RaceScenePlayerSpawner : MonoBehaviour
         }
 
         var myRoomData = allRoomData.FirstOrDefault(p => p.Object.HasStateAuthority);
-        int characterIndex = LocalPlayerSelection.CharacterIndex;
-        Debug.Log($"[RaceScenePlayerSpawner] myRoomData null? {myRoomData == null}, characterIndex CHỌN = {characterIndex}");
+        // Ưu tiên giá trị đã đồng bộ trong PlayerRoomData (lấy từ hồ sơ ở lobby); fallback về lựa chọn cục bộ.
+        int characterIndex = myRoomData != null ? myRoomData.CharacterIndex : LocalPlayerSelection.CharacterIndex;
+        int skinIndex = myRoomData != null ? myRoomData.SkinIndex : LocalPlayerSelection.SkinIndex;
+        Debug.Log($"[RaceScenePlayerSpawner] myRoomData null? {myRoomData == null}, characterIndex CHỌN = {characterIndex}, skinIndex = {skinIndex}");
 
         NetworkPrefabRef prefabToSpawn = CharacterCatalog.Instance.Get(characterIndex).prefab;
 
@@ -30,7 +32,14 @@ public class RaceScenePlayerSpawner : MonoBehaviour
         Vector3 pos = spawnPoints[spawnIndex].position;
 
         // 3. Spawn nhân vật chạy thật
-        runner.Spawn(prefabToSpawn, pos, Quaternion.identity, runner.LocalPlayer);
+        // Gửi chỉ số nhân vật + màu kèm dữ liệu mạng của nhân vật để MỌI máy áp đúng màu da (xem CharacterSkin).
+        runner.Spawn(prefabToSpawn, pos, Quaternion.identity, runner.LocalPlayer,
+            onBeforeSpawned: (spawnRunner, spawnedObject) =>
+            {
+                CharacterSkin skin = spawnedObject.GetComponentInChildren<CharacterSkin>();
+                if (skin != null)
+                    skin.SetAppearance(characterIndex, skinIndex);
+            });
 
        
     }

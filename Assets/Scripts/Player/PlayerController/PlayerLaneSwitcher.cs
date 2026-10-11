@@ -60,7 +60,7 @@ public class PlayerLaneSwitcher : NetworkBehaviour
     {
         if (!_isSpawned) return; // chặn truy cập Object khi chưa sẵn sàng
         if (!Object.HasStateAuthority) return;
-        if (!stats.canMove) return;
+        if (!stats.canMove || stats.isFrozenByQuestion || stats.isDead) return;
 
         transform.Translate(Vector3.forward * stats.moveSpeed * Time.deltaTime, Space.World);
 
@@ -92,6 +92,7 @@ public class PlayerLaneSwitcher : NetworkBehaviour
     public void MoveToLeftLane()
     {
         if (isChangingLane || !Object.HasStateAuthority) return;
+        if (stats != null && stats.isDead) return; // đang chết: bỏ qua input, tránh dồn lệnh đổi làn sang lúc hồi sinh
         if (currentLaneIndex > 0)
         {
             currentLaneIndex--;
@@ -103,6 +104,7 @@ public class PlayerLaneSwitcher : NetworkBehaviour
     public void MoveToRightLane()
     {
         if (isChangingLane || !Object.HasStateAuthority) return;
+        if (stats != null && stats.isDead) return;
         if (currentLaneIndex < laneXPositions.Length - 1)
         {
             currentLaneIndex++;

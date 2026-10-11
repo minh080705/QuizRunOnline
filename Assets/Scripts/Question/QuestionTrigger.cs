@@ -7,6 +7,7 @@
 //
 // Không chứa UI, không chứa JSON -> nhẹ, dễ nhân bản ra nhiều object.
 
+using Fusion;
 using UnityEngine;
 
 public class QuestionTrigger : MonoBehaviour
@@ -16,6 +17,13 @@ public class QuestionTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player"))
+            return;
+
+        // Chỉ nhân vật do CHÍNH máy này điều khiển mới được kích hoạt câu hỏi.
+        // Bản proxy của người chơi khác (được Fusion replicate sang) cũng mang tag "Player",
+        // nếu không lọc thì họ chạm trigger sẽ bật câu hỏi trên màn hình của mình.
+        NetworkObject playerObject = other.GetComponentInParent<NetworkObject>();
+        if (playerObject == null || !playerObject.HasStateAuthority)
             return;
 
         if (isTriggered)

@@ -15,7 +15,18 @@ public class PlayerAnimation : MonoBehaviour
     private static readonly int HitWallParam = Animator.StringToHash("HitWall");
     private static readonly int IsDeadParam = Animator.StringToHash("IsDead");
 
+    [Header("Hồi sinh")]
+    [Tooltip("Tên state chạy trong Animator Controller. State Cat_Death không có transition đi ra, nên khi hồi sinh phải ép chuyển về state này.")]
+    [SerializeField] private string respawnStateName = "Cat_RunLong";
+    [SerializeField] private float respawnCrossFade = 0.1f;
+
     private bool isDead = false;
+
+    /// <summary>
+    /// true trên bản proxy (nhân vật của người khác): Animator do PlayerNetworkState điều khiển theo dữ liệu mạng,
+    /// không tự đọc PlayerStats vì moveSpeed của proxy luôn bằng 0.
+    /// </summary>
+    public bool DrivenRemotely { get; set; }
 
     private void Awake()
     {
@@ -26,7 +37,7 @@ public class PlayerAnimation : MonoBehaviour
     private void Update()
     {
         // Nếu đã chết thì không cập nhật movement nữa
-        if (isDead) return;
+        if (isDead || DrivenRemotely) return;
 
         // Tự động đọc từ PlayerLaneSwitcher nếu có gán reference.
         // ĐIỀU CHỈNH: đổi PlayerLaneSwitcher.CurrentSpeed / PlayerLaneSwitcher.IsGrounded
@@ -81,5 +92,16 @@ public class PlayerAnimation : MonoBehaviour
     {
         isDead = false;
         animator.SetBool(IsDeadParam, false);
+
+        // IsDead/HitWall/Jump/Slide là Trigger: xóa trigger còn tồn đọng, nếu không vừa rời state Death
+        // là bị đá ngược vào Death/HitWall ngay.
+        animator.ResetTrigger(IsDeadParam);
+        animator.ResetTrigger(HitWallParam);
+        animator.ResetTrigger(JumpParam);
+        animator.ResetTrigger(SlideParam);
+
+        // Cat_Death không có transition đi ra nên phải ép về state chạy. Nếu tên state sai, Unity tự ghi
+        // cảnh báo "State could not be found" trong Console.
+        animator.CrossFadeInFixedTime(respawnStateName, respawnCrossFade);
     }
 }

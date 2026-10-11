@@ -8,7 +8,6 @@ public class PlayerBuffManager : MonoBehaviour
     {
         public int currentStack = 0;
         public GameObject effectInstance;
-        // Xóa: public Coroutine timeoutRoutine; -- không cần biến chặn 1-coroutine-duy-nhất nữa
         public BuffContext context = new BuffContext();
     }
 
@@ -32,23 +31,33 @@ public class PlayerBuffManager : MonoBehaviour
         buffDef.OnStackChanged(stats, state.currentStack, state.context);
         PlayEffect(state, buffDef.buffEffectPrefab, buffDef.buffDuration);
 
-       
         StartCoroutine(Timeout(buffDef, state));
     }
 
     private void PlayEffect(BuffRuntimeState state, GameObject effectPrefab, float duration)
     {
         if (state.effectInstance != null) Destroy(state.effectInstance);
-        if (effectPrefab != null)
-            state.effectInstance = Instantiate(effectPrefab, transform.position, Quaternion.identity, transform);
 
-        StartCoroutine(RemoveEffectAfter(state, duration));
+        GameObject newInstance = null;
+        if (effectPrefab != null)
+            newInstance = Instantiate(effectPrefab, transform.position, Quaternion.identity, transform);
+
+        state.effectInstance = newInstance;
+
+        StartCoroutine(RemoveEffectAfter(state, newInstance, duration));
     }
 
-    private IEnumerator RemoveEffectAfter(BuffRuntimeState state, float duration)
+    private IEnumerator RemoveEffectAfter(BuffRuntimeState state, GameObject instance, float duration)
     {
         yield return new WaitForSeconds(duration);
-        if (state.effectInstance != null) Destroy(state.effectInstance);
+
+        // Chỉ destroy nếu instance này vẫn đang là effect hiện tại
+        // (chưa bị một lần ApplyStack khác thay thế bằng effect mới hơn)
+        if (state.effectInstance == instance)
+        {
+            if (instance != null) Destroy(instance);
+            state.effectInstance = null;
+        }
     }
 
     private IEnumerator Timeout(Buff buffDef, BuffRuntimeState state)
@@ -57,6 +66,13 @@ public class PlayerBuffManager : MonoBehaviour
 
         if (state.currentStack > 0) state.currentStack--;
         buffDef.OnStackChanged(stats, state.currentStack, state.context);
-        
+
+        // Buff hết hoàn toàn -> xóa entry để lần áp dụng sau baseline lại từ đầu (OnFirstApplied)
+        if (state.currentStack <= 0
+            && activeBuffs.TryGetValue(buffDef, out var currentState)
+            && currentState == state)
+        {
+            activeBuffs.Remove(buffDef);
+        }
     }
 }

@@ -45,7 +45,7 @@ public class InventoryUI : MonoBehaviour
 
     private void BindInventory(InventoryManager inv)
     {
-        Debug.Log($"[InventoryUI] BindInventory gọi, inventoryManager cũ ID={inventoryManager?.GetInstanceID()}, inventoryManager mới ID={inv?.GetInstanceID()}");
+        
         if (inventoryManager != null)
         {
             inventoryManager.OnInventoryChanged -= RefreshUI; // gỡ đăng ký cũ, tránh trùng lặp
@@ -75,11 +75,11 @@ public class InventoryUI : MonoBehaviour
     private void RefreshUI()
     {
         if (inventoryManager == null) return;
-        Debug.Log($"[InventoryUI] RefreshUI chạy trên instance ID={inventoryManager.GetInstanceID()}, SlotCount={inventoryManager.SlotCount}");
+       
         for (int i = 0; i < slotIcons.Length; i++)
         {
             Buff item = inventoryManager.GetItemAt(i);
-            Debug.Log($"[InventoryUI]   Slot {i}: {(item != null ? item.name : "trống")}");
+                
           
             if (item != null && item.icon != null)
             {

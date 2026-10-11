@@ -25,6 +25,10 @@ GameObject:
   - component: {fileID: 7548429728201637263}
   - component: {fileID: -2928320117201817946}
   - component: {fileID: 7434910941825321503}
+  - component: {fileID: -4109005207118685717}
+  - component: {fileID: 6961414789796234576}
+  - component: {fileID: 7758709722424202053}
+  - component: {fileID: 4411597332511635956}
   m_Layer: 0
   m_Name: character
   m_TagString: Player
@@ -136,6 +140,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 4518302731917363103}
   playerStats: {fileID: 1428434738204372398}
+  respawnStateName: Cat_RunLong
+  respawnCrossFade: 0.1
 --- !u!114 &8081633757561956898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,10 +197,14 @@ MonoBehaviour:
   jumpForce: 5
   isGrounded: 1
   baseSpeed: 15
-  accelerationRate: 0.05
-  maxSpeed: 10000
+  accelerationRate: 0.3
+  maxSpeed: 1000
+  buffMultiplier: 1
   isDead: 0
   canMove: 0
+  hasFinishedRace: 0
+  _IsEliminated:
+    RawValue: 0
 --- !u!114 &8159021769834891947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,6 +359,9 @@ MonoBehaviour:
   - {fileID: 8081633757561956898}
   - {fileID: 1428434738204372398}
   - {fileID: -2928320117201817946}
+  - {fileID: 6961414789796234576}
+  - {fileID: 7758709722424202053}
+  - {fileID: 4411597332511635956}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &7548429728201637263
 MonoBehaviour:
@@ -415,6 +428,79 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b516b7b5accf9948b67cbbbf9c14ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-4109005207118685717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218935437837961677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25cc1d81cbfc61742bae32bddbae5429, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coastDuration: 2
+  playerStats: {fileID: 1428434738204372398}
+  collidersToDisableOnFinish:
+  - {fileID: 6664392264524385675}
+  characterVisual: {fileID: 7514829177251599417}
+--- !u!114 &6961414789796234576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218935437837961677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22610e283fa3cb348a31bba79fe5d1d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerAnimation: {fileID: 0}
+  stats: {fileID: 0}
+  playerJump: {fileID: 0}
+  _Speed: 0
+  _IsJumping:
+    RawValue: 0
+  _IsDead:
+    RawValue: 0
+  _JumpCount: 0
+  _SlideCount: 0
+--- !u!114 &7758709722424202053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218935437837961677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d1a1749aedd82a4383b4e62ce8f9f3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxLives: 3
+  respawnDelay: 5
+  respawnShield: {fileID: 11400000, guid: 690ddc008ae130648b8479754d5a5285, type: 2}
+  respawnSpeedFactor: 1
+  spectateDelay: 2
+  _Lives: 0
+--- !u!114 &4411597332511635956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218935437837961677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f666a1faa6886ec4c8997c4fd2cc0ca5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetRenderer: {fileID: 1946548047386094375}
+  materialSlot: 0
+  _CharacterIndex: 0
+  _SkinIndex: 0
 --- !u!1 &2662258610342259386
 GameObject:
   m_ObjectHideFlags: 0
@@ -637,7 +723,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 28a3c8fe40369b041b9d33a917f2c516, type: 2}
+  - {fileID: 2100000, guid: 644756ab33442d0428b5f2a800727281, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
