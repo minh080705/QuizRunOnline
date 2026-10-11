@@ -106,3 +106,7 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ss]ceneDependencyCache*
 # Quá 100MB, vượt giới hạn file của GitHub (plugin macOS của Firebase SDK, import lại từ SDK khi cần)
 Assets/Firebase/Plugins/x86_64/FirebaseCppApp-13_17_0.bundle
+
+# Cấu hình editor/IDE cá nhân, không đưa lên repo
+.vscode/
+.vsconfig
