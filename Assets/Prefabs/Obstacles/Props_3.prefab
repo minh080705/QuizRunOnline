@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 6347302317298179579}
   - component: {fileID: 7415962677042442664}
   - component: {fileID: 142639560039676333}
+  - component: {fileID: -8266303617394086651}
+  - component: {fileID: -3657606622707691403}
   m_Layer: 0
   m_Name: Props_3
   m_TagString: Obstacle
@@ -26,13 +28,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6779906609306507486}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.044505868, y: 9.06, z: -26.8767}
-  m_LocalScale: {x: 2, y: 2, z: 3}
+  m_LocalRotation: {x: 0.21001062, y: 0.6752004, z: -0.21001062, w: -0.6752004}
+  m_LocalPosition: {x: 0, y: 0.81, z: -26.8767}
+  m_LocalScale: {x: 1, y: 1, z: 1.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 270, z: 34.555}
 --- !u!33 &7415962677042442664
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -86,3 +88,61 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &-8266303617394086651
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6779906609306507486}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.25156233
+  m_Height: 2.1709175
+  m_Direction: 2
+  m_Center: {x: -0.003056735, y: -0.008748114, z: 5.418104e-18}
+--- !u!114 &-3657606622707691403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6779906609306507486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845c415f3181b4840ab566c40e714752, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isRotating: 1
+  rotateX: 0
+  rotateY: 0
+  rotateZ: 1
+  rotationSpeed: 180
+  isFloating: 0
+  useEasingForFloating: 0
+  floatHeight: 1
+  floatSpeed: 1
+  isMoving: 0
+  useEasingForMoving: 0
+  moveMode: 2
+  pointsRelativeToInitial: 1
+  startPoint: {x: 0, y: 0, z: 0}
+  endPoint: {x: 3, y: 0, z: 0}
+  moveSpeed: 2
+  randomStartPosition: 0
+  randomDirection: 0
+  startScale: {x: 0, y: 0, z: 0}
+  endScale: {x: 0, y: 0, z: 0}
+  isScaling: 0
+  useEasingForScaling: 0
+  scaleLerpSpeed: 1

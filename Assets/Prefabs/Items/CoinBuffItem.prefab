@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3686649288349756391}
   - component: {fileID: 7347184759540296701}
   - component: {fileID: 7249006608912543229}
-  - component: {fileID: 5484282250395193371}
+  - component: {fileID: -6995596787644394083}
   m_Layer: 0
   m_Name: CoinBuffItem
   m_TagString: Untagged
@@ -108,7 +108,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5484282250395193371
+--- !u!114 &-6995596787644394083
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -117,9 +117,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8227993225698613235}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08a449ad1ca6386498f8f70fcc7215ce, type: 3}
+  m_Script: {fileID: 11500000, guid: d45be457e83816149ab75456e49c7619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedBuff: {fileID: 0}
-  inventoryManager: {fileID: 0}
-  rewardFlyDemo: {fileID: 0}
+  coinBuff: {fileID: 11400000, guid: c19609dd24a52e547af80eb2d81baa15, type: 2}
+  pickupEffect: {fileID: 3891973445508218817, guid: e190bf97c041e58448af6b043116cba0, type: 3}
+  effectOffset: {x: 0, y: 1, z: 0}

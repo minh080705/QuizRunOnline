@@ -13,6 +13,11 @@ public class PlayerCollisionHandler : MonoBehaviour
     [SerializeField] private float shakeDuration = 0.3f;
     [SerializeField] private float shakeMagnitude = 0.2f;
 
+    [Header("Hiệu ứng khi va chạm vật cản")]
+    [Tooltip("Prefab hiệu ứng hạt phát MỘT LẦN tại điểm va chạm khi nhân vật này đâm vào vật cản (tùy chọn, bỏ trống thì không có). " +
+             "Chỉ hiện ở máy của người chơi bị va. Gán prefab hiệu ứng (asset), không phải object trong scene.")]
+    [SerializeField] private ParticleSystem hitEffect;
+
     private bool isDead = false; // tránh trigger nhiều lần
     private PlayerStats stats; 
     public bool isShieldOn = false; //trạng thái khi nhân vật đang có Shield Buff
@@ -46,7 +51,7 @@ public class PlayerCollisionHandler : MonoBehaviour
         {
             if (!isShieldOn)
             {
-                HandleObstacleHit();
+                HandleObstacleHit(collision.contactCount > 0 ? collision.GetContact(0).point : transform.position);
             }
         }
     }
@@ -59,12 +64,13 @@ public class PlayerCollisionHandler : MonoBehaviour
         {
             if (!isShieldOn)
             {
-                HandleObstacleHit();
-            }   
+                // bounds.ClosestPoint chạy với mọi loại collider (Collider.ClosestPoint lỗi với MeshCollider không convex).
+                HandleObstacleHit(other.bounds.ClosestPoint(transform.position));
+            }
         }
     }
 
-    private void HandleObstacleHit()
+    private void HandleObstacleHit(Vector3 hitPoint)
     {
         if (isDead) return;
         isDead = true;
@@ -84,6 +90,9 @@ public class PlayerCollisionHandler : MonoBehaviour
             cameraShake = FindObjectOfType<CameraShake>();
         if (cameraShake != null)
             cameraShake.Shake(shakeDuration, shakeMagnitude);
+
+        // 3b. Hiệu ứng hạt tại điểm va chạm (chỉ máy này; đã chắc chắn là nhân vật của mình nhờ IsAuthority + isDead ở trên)
+        SpawnEffect.PlayAt(hitEffect, hitPoint);
 
         // 4. Trừ 1 mạng: còn mạng thì hồi sinh sau vài giây, hết mạng thì bị loại và chuyển sang quan sát
         if (lives != null)

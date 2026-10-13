@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Đường ray (section track) dựng bằng pool quanh "tâm thế giới" (WorldFocus): nhân vật local, hoặc người đang được camera
+/// theo dõi khi mình hết mạng / đã về đích. Khi tâm đổi sang người khác thì đặt lại cả dải track quanh Z mới (chỉ dời vị trí
+/// các object trong pool, rất rẻ); khi tâm đang chạy tới thì tái chế track phía sau lên phía trước như trước.
+/// </summary>
 public class TracksSpawner : MonoBehaviour
 {
     [SerializeField] GameObject track;
-    PlayerStats player;
+    Transform focus;
 
     [Header("Pooling Settings")]
     [SerializeField] int poolSize = 15;
@@ -12,24 +17,32 @@ public class TracksSpawner : MonoBehaviour
     [SerializeField] int tracksAhead = 10;
 
     private float trackLength;
+    private bool poolReady;
     private Stack<GameObject> pool = new Stack<GameObject>();
     private List<GameObject> activeTracks = new List<GameObject>(); // sắp xếp từ sau -> trước
-    private float lastSpawnZ; // vị trí Z của player tại thời điểm gần nhất active track
+    private float lastSpawnZ; // vị trí Z của tâm tại thời điểm gần nhất active track
 
     void OnEnable()
     {
-        PlayerContext.OnLocalPlayerReady += HandlePlayerReady;
+        WorldFocus.EnsureExists();
+        WorldFocus.OnTargetChanged += HandleFocusChanged;
+
+        if (WorldFocus.Target != null)
+            HandleFocusChanged(WorldFocus.Target);
     }
 
     void OnDisable()
     {
-        PlayerContext.OnLocalPlayerReady -= HandlePlayerReady;
+        WorldFocus.OnTargetChanged -= HandleFocusChanged;
     }
 
-    void HandlePlayerReady(Transform localPlayer)
+    void HandleFocusChanged(Transform target)
     {
-        player = PlayerContext.Instance.LocalStats;
-        SpawnInitialTracks();
+        focus = target;
+
+        // Pool chưa tạo xong (Start chưa chạy): Start sẽ tự bố trí khi xong.
+        if (focus != null && poolReady)
+            RelayoutAroundFocus();
     }
 
     void Start()
@@ -47,47 +60,64 @@ public class TracksSpawner : MonoBehaviour
             // 3. Đưa object vừa tạo vào Stack
             pool.Push(newTrack);
         }
+
+        poolReady = true;
+
+        if (focus != null)
+            RelayoutAroundFocus();
     }
 
     void Update()
     {
-        if (player == null) return; // chưa có player thì chưa làm gì
+        if (focus == null || !poolReady) return; // chưa có tâm thì chưa làm gì
 
-        // Nếu player đã đi quá 1 đoạn bằng trackLength kể từ lần active track gần nhất
-        if (player.transform.position.z - lastSpawnZ >= trackLength)
+        // Nếu tâm đã đi quá 1 đoạn bằng trackLength kể từ lần active track gần nhất
+        if (focus.position.z - lastSpawnZ >= trackLength)
         {
             Recycle();
             lastSpawnZ += trackLength; // cộng dồn để tránh trôi lệch (drift)
         }
     }
 
+    // Trả mọi track đang bật về pool rồi bố trí lại quanh Z của tâm hiện tại.
+    void RelayoutAroundFocus()
+    {
+        foreach (GameObject t in activeTracks)
+        {
+            if (t != null) ReturnToPool(t);
+        }
+        activeTracks.Clear();
+
+        SpawnInitialTracks();
+    }
+
     void SpawnInitialTracks()
     {
-        float playerZ = player.transform.position.z;
-        lastSpawnZ = playerZ;
+        float focusZ = focus.position.z;
+        lastSpawnZ = focusZ;
 
-        // 1. Bật 1 track ngay tại vị trí player
+        // 1. Bật 1 track ngay tại vị trí tâm
         GameObject centerTrack = GetFromPool();
         if (centerTrack != null)
         {
-            centerTrack.transform.position = new Vector3(0f, 0f, playerZ);
+            centerTrack.transform.position = new Vector3(0f, 0f, focusZ);
             activeTracks.Add(centerTrack);
         }
 
-        // 2. Bật các track phía sau: cách player trackLength/2, sau đó cách nhau trackLength
+        // 2. Bật các track phía sau: cách tâm trackLength/2, sau đó cách nhau trackLength
         for (int i = 0; i < tracksBehind; i++)
         {
-            float zPos = playerZ - (trackLength * 0.5f) - (i * trackLength);
+            float zPos = focusZ - (trackLength * 0.5f) - (i * trackLength);
             GameObject t = GetFromPool();
             if (t == null) break;
             t.transform.position = new Vector3(0f, 0f, zPos);
             activeTracks.Insert(0, t); // chèn vào đầu để giữ đúng thứ tự sau -> trước
         }
 
-        // 3. Bật các track phía trước: cách player trackLength/2, sau đó cách nhau trackLength
+        // 3. Bật các track phía trước: cách tâm trackLength/2, sau đó cách nhau trackLength
         for (int i = 0; i < tracksAhead; i++)
         {
-            float zPos = playerZ + (trackLength * 0.5f) + (i * trackLength);
+            float zPos = focusZ + (trackLength * 0.5f) + (i * trackLength);
             GameObject t = GetFromPool();
             if (t == null) break;
             t.transform.position = new Vector3(0f, 0f, zPos);

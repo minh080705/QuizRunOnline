@@ -3,8 +3,9 @@ using UnityEngine;
 
 /// <summary>
 /// Chạy trên MỌI client: đọc SpawnEntry do Master sinh (ObstacleSpawnPointGenerator) rồi dựng object CỤC BỘ
-/// (không phải NetworkObject) quanh người chơi local: vật cản, mẫu coin (bung từng đồng bằng CoinPatternBuilder),
-/// buff, câu hỏi. Mỗi người nhặt bản của chính mình. Entry bị vô hiệu hoặc ra khỏi phạm vi thì dọn hết object con.
+/// (không phải NetworkObject) quanh "tâm thế giới" (WorldFocus): vật cản, mẫu coin (bung từng đồng bằng CoinPatternBuilder),
+/// buff, câu hỏi. Tâm mặc định là nhân vật local; khi đang quan sát người khác (hết mạng / đã về đích) tâm là người đang xem,
+/// nên quanh họ luôn có đủ vật. Mỗi người nhặt bản của chính mình. Entry bị vô hiệu hoặc ra khỏi phạm vi thì dọn hết object con.
 ///
 /// Không dùng object pool: prefab Coin có SimpleGemsAnim chụp vị trí ở Start() rồi tự ghi đè vị trí mỗi frame,
 /// tái sử dụng object sẽ làm coin nhảy về chỗ cũ.
@@ -14,9 +15,12 @@ public class LocalObstacleSpawner : MonoBehaviour
     [SerializeField] private ObstacleSpawnPointGenerator generator;
     [Tooltip("Cùng asset SpawnProfile với generator (thư viện prefab, thông số mẫu coin).")]
     [SerializeField] private SpawnProfile profile;
-    [SerializeField] private float spawnRadius = 180f; // chỉ spawn trong bán kính này quanh player
+    [SerializeField] private float spawnRadius = 180f; // chỉ spawn trong bán kính này quanh tâm thế giới
+    [Tooltip("Số mục (entry) dựng mới tối đa mỗi frame. Khi tâm thế giới nhảy sang người ở xa sẽ có cả trăm vật cần dựng, " +
+             "dồn vào một frame thì giật; chia ra vài frame thì mượt. Phần chưa dựng sẽ dựng ở các frame sau.")]
+    [SerializeField] private int maxSpawnsPerFrame = 12;
 
-    private Transform localPlayer;
+    private Transform focus;
     private readonly Dictionary<int, List<GameObject>> spawned = new Dictionary<int, List<GameObject>>();
     private readonly HashSet<int> shouldExistIds = new HashSet<int>();
     private readonly List<int> toRemove = new List<int>();
@@ -24,26 +28,31 @@ public class LocalObstacleSpawner : MonoBehaviour
 
     void OnEnable()
     {
-        PlayerContext.OnLocalPlayerReady += HandlePlayerReady;
+        WorldFocus.EnsureExists();
+        WorldFocus.OnTargetChanged += HandleFocusChanged;
+
+        if (WorldFocus.Target != null)
+            HandleFocusChanged(WorldFocus.Target);
     }
 
     void OnDisable()
     {
-        PlayerContext.OnLocalPlayerReady -= HandlePlayerReady;
+        WorldFocus.OnTargetChanged -= HandleFocusChanged;
     }
 
-    void HandlePlayerReady(Transform player)
+    void HandleFocusChanged(Transform target)
     {
-        localPlayer = player;
+        focus = target;
     }
 
     void Update()
     {
-        if (localPlayer == null || profile == null) return;
+        if (focus == null || profile == null) return;
         if (generator == null || generator.Object == null || !generator.Object.IsValid) return;
 
         var entries = generator.Entries;
-        float playerZ = localPlayer.position.z;
+        float focusZ = focus.position.z;
+        int spawnedThisFrame = 0;
         shouldExistIds.Clear();
 
         for (int i = 0; i < entries.Length; i++)
@@ -53,12 +62,16 @@ public class LocalObstacleSpawner : MonoBehaviour
 
             // Mẫu dài (hàng coin) tính theo tâm của nó, nới phạm vi thêm nửa chiều dài.
             float centerZ = entry.Z + entry.Length * 0.5f;
-            if (Mathf.Abs(centerZ - playerZ) > spawnRadius + entry.Length * 0.5f) continue;
+            if (Mathf.Abs(centerZ - focusZ) > spawnRadius + entry.Length * 0.5f) continue;
 
             shouldExistIds.Add(entry.Id);
 
             if (!spawned.ContainsKey(entry.Id))
             {
+                // Hết hạn mức frame này: để frame sau (entry vẫn nằm trong shouldExistIds nên không bị coi là cần dọn).
+                if (spawnedThisFrame >= maxSpawnsPerFrame) continue;
+                spawnedThisFrame++;
+
                 var objects = new List<GameObject>(4);
                 SpawnEntryObjects(entry, objects);
                 spawned[entry.Id] = objects;

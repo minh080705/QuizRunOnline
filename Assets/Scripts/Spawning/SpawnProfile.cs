@@ -7,6 +7,9 @@ public class ObstacleEntry
 {
     public GameObject prefab;
     public ObstacleKind kind;
+    [Tooltip("SingleLane: vật cản chiếm một làn (đặt ở tâm làn). FullWidth: vật lớn phủ cả đường (đặt ở giữa đường), " +
+             "chỉ dùng được với loại Low (nhảy qua) hoặc Overhead (trượt dưới). BlockLane + FullWidth không qua được nên bị bỏ qua.")]
+    public LaneSpan span = LaneSpan.SingleLane;
     [Tooltip("Chiều dài (theo trục Z, mét) của vật cản, dùng để chừa khoảng cách giữa các hàng và không đặt coin đè lên.")]
     public float length = 2f;
 }
@@ -51,6 +54,9 @@ public class SpawnProfile : ScriptableObject
     public float lowWallWeight = 0.6f;
     public float overheadWeight = 0.6f;
     public float mixedWeight = 0.5f;
+    [Tooltip("Hàng nhảy/trượt có cả prefab FullWidth lẫn SingleLane cùng loại: xác suất dùng một vật lớn phủ cả đường " +
+             "(thay vì mỗi làn một vật). Chỉ có FullWidth thì luôn dùng vật lớn; chỉ có SingleLane thì luôn mỗi làn một vật.")]
+    [Range(0f, 1f)] public float fullWidthChance = 0.5f;
 
     [Header("Coin")]
     [Tooltip("Xác suất có một mẫu coin trong khoảng trống giữa hai hàng.")]
@@ -103,24 +109,66 @@ public class SpawnProfile : ScriptableObject
 
     public int LaneCount => laneX != null ? laneX.Length : 0;
 
-    public bool HasKind(ObstacleKind kind)
+    /// <summary>X giữa đường: nơi đặt vật cản FullWidth.</summary>
+    public float CenterX
+    {
+        get
+        {
+            if (laneX == null || laneX.Length == 0) return 0f;
+            float min = laneX[0], max = laneX[0];
+            for (int i = 1; i < laneX.Length; i++)
+            {
+                min = Mathf.Min(min, laneX[i]);
+                max = Mathf.Max(max, laneX[i]);
+            }
+            return (min + max) * 0.5f;
+        }
+    }
+
+    // BlockLane + FullWidth phủ kín đường mà không có cách né nên không bao giờ được dùng.
+    private static bool IsUsable(ObstacleEntry e, ObstacleKind kind, LaneSpan span)
+    {
+        return e != null && e.prefab != null && e.kind == kind && e.span == span
+            && !(kind == ObstacleKind.BlockLane && span == LaneSpan.FullWidth);
+    }
+
+    public bool HasKind(ObstacleKind kind, LaneSpan span)
     {
         if (obstacles == null) return false;
         for (int i = 0; i < obstacles.Length; i++)
-            if (obstacles[i] != null && obstacles[i].prefab != null && obstacles[i].kind == kind) return true;
+            if (IsUsable(obstacles[i], kind, span)) return true;
         return false;
     }
 
-    /// <summary>Chọn ngẫu nhiên một prefab thuộc loại kind; trả -1 nếu chưa có prefab nào.</summary>
-    public int PickObstacle(ObstacleKind kind)
+    /// <summary>Chọn ngẫu nhiên một prefab thuộc loại kind và kiểu chiếm làn span; trả -1 nếu chưa có prefab nào.</summary>
+    public int PickObstacle(ObstacleKind kind, LaneSpan span = LaneSpan.SingleLane)
     {
         if (obstacles == null) return -1;
 
         var candidates = new List<int>(4);
         for (int i = 0; i < obstacles.Length; i++)
-            if (obstacles[i] != null && obstacles[i].prefab != null && obstacles[i].kind == kind) candidates.Add(i);
+            if (IsUsable(obstacles[i], kind, span)) candidates.Add(i);
 
         return candidates.Count == 0 ? -1 : candidates[UnityEngine.Random.Range(0, candidates.Count)];
+    }
+
+    /// <summary>Prefab thứ variant có phải vật cản phủ cả đường không (dùng khi kiểm thử).</summary>
+    public bool IsFullWidth(int variant)
+    {
+        return obstacles != null && variant >= 0 && variant < obstacles.Length
+            && obstacles[variant] != null && obstacles[variant].span == LaneSpan.FullWidth;
+    }
+
+    private void OnValidate()
+    {
+        if (obstacles == null) return;
+        for (int i = 0; i < obstacles.Length; i++)
+        {
+            ObstacleEntry e = obstacles[i];
+            if (e != null && e.kind == ObstacleKind.BlockLane && e.span == LaneSpan.FullWidth)
+                Debug.LogWarning($"[SpawnProfile] Vật cản #{i}: BlockLane + FullWidth phủ kín đường nên không qua được, " +
+                                 "sẽ bị bỏ qua. Đổi loại sang Low (nhảy qua) hoặc Overhead (trượt dưới).", this);
+        }
     }
 
     public float ObstacleLength(int variant)
