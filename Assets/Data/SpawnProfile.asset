@@ -13,16 +13,27 @@ MonoBehaviour:
   m_Name: SpawnProfile
   m_EditorClassIdentifier: 
   obstacles:
-  - prefab: {fileID: 1197311757702504449, guid: adde141523d233e489738db484020497, type: 3}
-    kind: 0
-    length: 3
+  - prefab: {fileID: 6886035684964100126, guid: ac40f1b3396b659439b573fd6a0bab12, type: 3}
+    kind: 1
+    span: 1
+    length: 2
   - prefab: {fileID: 6779906609306507486, guid: eb03dfcb82a2ad94c9dd44f538311deb, type: 3}
     kind: 1
+    span: 0
+    length: 2
+  - prefab: {fileID: 8777890137183256731, guid: 9b2edc14f85796247a320c68108a1b27, type: 3}
+    kind: 0
+    span: 0
+    length: 2
+  - prefab: {fileID: 6779906609306507486, guid: 6c4b2dc6fa9da824081d168592637334, type: 3}
+    kind: 2
+    span: 0
     length: 2
   coinPrefab: {fileID: 9109795891433891009, guid: cd35cbcf7a0339448aaefc57702bb378, type: 3}
   buffPrefabs:
   - {fileID: 1455734309099242881, guid: fe67d49472d658a43ba352b47e0a48d4, type: 3}
   - {fileID: 8647870385273488654, guid: a7a6a9339a65ba24dbf58563de6e6fc3, type: 3}
+  - {fileID: 8227993225698613235, guid: ea2d5df144c5c45428c686ee1ef8bc17, type: 3}
   questionPrefabs:
   - {fileID: 7810271911876395923, guid: 05c46c84560e10f488c951729675a830, type: 3}
   - {fileID: 7810271911876395923, guid: 3f7e1d7e71a7bef41bc7f995e66d547f, type: 3}
@@ -89,6 +100,7 @@ MonoBehaviour:
   lowWallWeight: 0.6
   overheadWeight: 0.6
   mixedWeight: 0.5
+  fullWidthChance: 0.5
   coinChance:
     serializedVersion: 2
     m_Curve:

@@ -9,6 +9,16 @@ public enum ObstacleKind : byte
     Overhead = 2,  // trên cao: phải trượt dưới
 }
 
+/// <summary>
+/// Vật cản chiếm bao nhiêu làn. SingleLane: một làn, đặt ở tâm làn. FullWidth: một vật lớn phủ cả đường, đặt ở giữa đường;
+/// chỉ hợp lệ với loại Low (nhảy qua) hoặc Overhead (trượt dưới), vì loại BlockLane phủ cả đường thì không thể qua.
+/// </summary>
+public enum LaneSpan : byte
+{
+    SingleLane = 0,
+    FullWidth = 1,
+}
+
 /// <summary>Loại đồ vật một SpawnEntry mô tả.</summary>
 public enum SpawnKind : byte
 {

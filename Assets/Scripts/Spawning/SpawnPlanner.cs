@@ -171,9 +171,12 @@ public static class SpawnPlanner
 
     private static RowPattern PickPattern(SpawnProfile profile, float p, bool actionOk)
     {
-        bool hasBlock = profile.HasKind(ObstacleKind.BlockLane);
-        bool hasLow = profile.HasKind(ObstacleKind.Low);
-        bool hasOver = profile.HasKind(ObstacleKind.Overhead);
+        bool hasBlock = profile.HasKind(ObstacleKind.BlockLane, LaneSpan.SingleLane);
+        // Hàng nhảy/trượt dựng được bằng vật một làn (mỗi làn một cái) hoặc một vật lớn phủ cả đường.
+        bool hasLowSingle = profile.HasKind(ObstacleKind.Low, LaneSpan.SingleLane);
+        bool hasLow = hasLowSingle || profile.HasKind(ObstacleKind.Low, LaneSpan.FullWidth);
+        bool hasOver = profile.HasKind(ObstacleKind.Overhead, LaneSpan.SingleLane)
+                       || profile.HasKind(ObstacleKind.Overhead, LaneSpan.FullWidth);
 
         float dbl = p >= profile.doubleUnlock ? Mathf.Clamp01(profile.doubleLaneChance.Evaluate(p)) : 0f;
 
@@ -182,7 +185,8 @@ public static class SpawnPlanner
         float wStaggered = hasBlock && p >= profile.staggeredUnlock ? profile.staggeredWeight : 0f;
         float wLow = actionOk && hasLow && p >= profile.lowWallUnlock ? profile.lowWallWeight : 0f;
         float wOver = actionOk && hasOver && p >= profile.overheadUnlock ? profile.overheadWeight : 0f;
-        float wMixed = actionOk && hasLow && hasBlock && p >= profile.mixedUnlock ? profile.mixedWeight : 0f;
+        // Mẫu hỗn hợp đặt vật thấp ở MỘT làn nên cần prefab Low một làn (vật phủ cả đường không dùng được ở đây).
+        float wMixed = actionOk && hasLowSingle && hasBlock && p >= profile.mixedUnlock ? profile.mixedWeight : 0f;
 
         float total = wSingle + wDouble + wStaggered + wLow + wOver + wMixed;
         if (total <= 0f) return RowPattern.Empty;
@@ -208,7 +212,7 @@ public static class SpawnPlanner
         passableMask = all;
         rowLength = 0f;
 
-        if (!profile.HasKind(ObstacleKind.BlockLane)) return false;
+        if (!profile.HasKind(ObstacleKind.BlockLane, LaneSpan.SingleLane)) return false;
 
         var masks = new List<int>(8);
         for (int m = 1; m < all; m++)
@@ -246,11 +250,25 @@ public static class SpawnPlanner
         return false;
     }
 
-    /// <summary>Hàng phủ cả các làn bằng vật cản thấp (nhảy) hoặc trên cao (trượt): làn nào cũng qua được bằng hành động.</summary>
+    /// <summary>
+    /// Hàng phủ cả đường bằng vật cản thấp (nhảy) hoặc trên cao (trượt): làn nào cũng qua được bằng hành động.
+    /// Dựng bằng MỘT vật lớn FullWidth ở giữa đường (một entry) hoặc mỗi làn một vật SingleLane (nhiều entry).
+    /// </summary>
     private static void BuildActionRow(SpawnProfile profile, ref PlannerState st, int laneCount, ObstacleKind kind,
         float z, List<SpawnEntry> output, out float rowLength)
     {
         rowLength = 0f;
+
+        bool hasFull = profile.HasKind(kind, LaneSpan.FullWidth);
+        bool hasSingle = profile.HasKind(kind, LaneSpan.SingleLane);
+        if (hasFull && (!hasSingle || Random.value < profile.fullWidthChance))
+        {
+            int bigVariant = profile.PickObstacle(kind, LaneSpan.FullWidth);
+            AddEntry(output, ref st, SpawnKind.Obstacle, bigVariant, CoinPattern.Line, 0, profile.CenterX, z, 0f);
+            rowLength = profile.ObstacleLength(bigVariant);
+            return;
+        }
+
         for (int lane = 0; lane < laneCount; lane++)
         {
             int variant = profile.PickObstacle(kind);
@@ -269,7 +287,8 @@ public static class SpawnPlanner
         passableMask = all;
         rowLength = 0f;
 
-        if (!profile.HasKind(ObstacleKind.BlockLane) || !profile.HasKind(ObstacleKind.Low)) return false;
+        if (!profile.HasKind(ObstacleKind.BlockLane, LaneSpan.SingleLane) || !profile.HasKind(ObstacleKind.Low, LaneSpan.SingleLane))
+            return false;
 
         var lanes = new List<int>(laneCount);
         for (int i = 0; i < laneCount; i++) lanes.Add(i);
@@ -509,9 +528,19 @@ public static class SpawnPlanner
                     if (e.Kind == (byte)SpawnKind.Obstacle)
                     {
                         obstacleCount++;
-                        int lane = CoinPatternBuilder.NearestLane(profile, e.X);
                         float half = profile.ObstacleLength(e.Variant) * 0.5f;
-                        obstacles.Add(new SimObstacle { lane = lane, zMin = e.Z - half, zMax = e.Z + half });
+
+                        // Vật phủ cả đường chiếm mọi làn; vật một làn chỉ chiếm làn gần nhất.
+                        if (profile.IsFullWidth(e.Variant))
+                        {
+                            for (int l = 0; l < laneCount; l++)
+                                obstacles.Add(new SimObstacle { lane = l, zMin = e.Z - half, zMax = e.Z + half });
+                        }
+                        else
+                        {
+                            int lane = CoinPatternBuilder.NearestLane(profile, e.X);
+                            obstacles.Add(new SimObstacle { lane = lane, zMin = e.Z - half, zMax = e.Z + half });
+                        }
                     }
                     else if (e.Kind == (byte)SpawnKind.Coin)
                     {
