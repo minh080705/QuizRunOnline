@@ -1,6 +1,6 @@
 ﻿// QuestionManager.cs
 // Singleton duy nhất quản lý:
-// - Load dữ liệu câu hỏi từ JSON (chỉ load 1 lần)
+// - Load dữ liệu câu hỏi từ JSON (chỉ load 1 lần), chia theo loại (math / english) để mỗi prefab hỏi đúng loại của nó
 // - Hiển thị / ẩn UI câu hỏi (dùng chung cho mọi chướng ngại vật)
 // - Kiểm tra đáp án và gọi hiệu ứng / buff tương ứng
 // - Tính điểm quiz qua PlayerScoreManager
@@ -46,6 +46,9 @@ public class QuestionManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timerText;
 
     private QuestionData[] questions;
+
+    // Mỗi loại câu hỏi một "túi" xáo trộn: hỏi hết túi mới lặp lại câu cũ (xem QuestionBag).
+    private readonly Dictionary<QuestionCategory, QuestionBag> bags = new Dictionary<QuestionCategory, QuestionBag>();
 
     // =========================================================
     // INTERNAL STATE
@@ -96,7 +99,47 @@ public class QuestionManager : MonoBehaviour
         }
 
         questions = questionList.questions;
+        BuildBags();
+    }
 
+    // Chia chỉ số câu hỏi theo trường "category" (không phân biệt hoa thường). Câu có loại lạ chỉ nằm trong nhóm Any.
+    private void BuildBags()
+    {
+        var all = new List<int>(questions.Length);
+        var math = new List<int>();
+        var english = new List<int>();
+        int unknown = 0;
+
+        for (int i = 0; i < questions.Length; i++)
+        {
+            all.Add(i);
+
+            switch ((questions[i].category ?? string.Empty).Trim().ToLowerInvariant())
+            {
+                case "math": math.Add(i); break;
+                case "english": english.Add(i); break;
+                default: unknown++; break;
+            }
+        }
+
+        if (unknown > 0)
+            Debug.LogWarning($"[Question] {unknown} câu có category không phải math/english, chỉ được hỏi ở prefab loại Any.");
+
+        bags[QuestionCategory.Any] = new QuestionBag(all);
+        bags[QuestionCategory.Math] = new QuestionBag(math);
+        bags[QuestionCategory.English] = new QuestionBag(english);
+    }
+
+    // Chọn chỉ số câu hỏi kế tiếp của loại yêu cầu; loại đó không có câu nào thì rơi về kho trộn.
+    private int PickQuestionIndex(QuestionCategory category)
+    {
+        if (!bags.TryGetValue(category, out QuestionBag bag) || bag.Count == 0)
+        {
+            if (category != QuestionCategory.Any)
+                Debug.LogWarning($"[Question] Không có câu hỏi loại {category}, dùng kho trộn.");
+            bag = bags[QuestionCategory.Any];
+        }
+        return bag.Next();
     }
 
     private void Start()
@@ -157,8 +200,10 @@ public class QuestionManager : MonoBehaviour
         screenQuestion.SetActive(true);
         isQuestionVisible = true;
 
-        int randomIndex = Random.Range(0, questions.Length);
-        QuestionData question = questions[randomIndex];
+        // Loại câu hỏi do prefab chạm vào quyết định (Math / English / Any).
+        QuestionCategory category = trigger != null ? trigger.Category : QuestionCategory.Any;
+        QuestionData question = questions[PickQuestionIndex(category)];
+        Debug.Log($"[Question] {category} #{question.id} ({question.category})");
 
         questionText.text = question.question;
 
@@ -303,6 +348,52 @@ public class QuestionManager : MonoBehaviour
     // =========================================================
     // JSON DATA CLASS
     // =========================================================
+
+    /// <summary>
+    /// Túi câu hỏi xáo trộn: lấy lần lượt hết túi rồi mới trộn lại, nên một câu không lặp trước khi hỏi hết các câu còn lại.
+    /// Lượt mới không bắt đầu bằng đúng câu cuối của lượt trước.
+    /// </summary>
+    private class QuestionBag
+    {
+        private readonly List<int> indices;
+        private readonly List<int> order = new List<int>();
+        private int cursor;
+        private int last = -1;
+
+        public int Count => indices.Count;
+
+        public QuestionBag(List<int> indices)
+        {
+            this.indices = indices;
+        }
+
+        public int Next()
+        {
+            if (indices.Count == 0) return -1;
+            if (cursor >= order.Count) Reshuffle();
+
+            last = order[cursor++];
+            return last;
+        }
+
+        private void Reshuffle()
+        {
+            order.Clear();
+            order.AddRange(indices);
+
+            for (int i = order.Count - 1; i > 0; i--)
+            {
+                int j = Random.Range(0, i + 1);
+                (order[i], order[j]) = (order[j], order[i]);
+            }
+
+            // Các chỉ số trong túi đều khác nhau nên đổi chỗ với phần tử cuối là đủ để tránh trùng câu vừa hỏi.
+            if (order.Count > 1 && order[0] == last)
+                (order[0], order[order.Count - 1]) = (order[order.Count - 1], order[0]);
+
+            cursor = 0;
+        }
+    }
 
     [System.Serializable]
     private class QuestionList

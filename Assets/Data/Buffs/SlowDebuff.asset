@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c845bd458d8fec4b8308431eb04fbdc, type: 3}
   m_Name: SlowDebuff
   m_EditorClassIdentifier: 
-  buffDuration: 5
+  buffDuration: 3
   icon: {fileID: 21300000, guid: 5619b10389502e744b9045398cdce2e3, type: 3}
   maxStack: 3
   buffEffectPrefab: {fileID: 6126188424833946103, guid: a58aa9a78f2b45b45bb0f3e2e1e3ad3c, type: 3}
-  speedMultiplier: 0.8
+  speedMultiplier: 0.6

@@ -12,6 +12,11 @@ using UnityEngine;
 
 public class QuestionTrigger : MonoBehaviour
 {
+    [Tooltip("Loại câu hỏi prefab này hỏi: Math = toán, English = tiếng Anh, Any = trộn cả hai.")]
+    [SerializeField] private QuestionCategory category = QuestionCategory.Any;
+
+    public QuestionCategory Category => category;
+
     private bool isTriggered = false;
 
     private void OnTriggerEnter(Collider other)
@@ -46,18 +51,22 @@ public class QuestionTrigger : MonoBehaviour
         }
     }
 
-    // Được QuestionManager gọi ngược lại sau khi trả lời xong
-    // (nếu muốn xử lý riêng cho từng chướng ngại vật, ví dụ: phá hủy object, đổi màu, v.v.)
+    // Được QuestionManager gọi ngược lại sau khi trả lời xong (đúng, sai hoặc hết giờ).
+    // Câu hỏi là object CỤC BỘ của máy này và chỉ nhân vật của chính mình mới kích hoạt được (xem OnTriggerEnter),
+    // nên ẩn ở đây chỉ ẩn bản trên máy mình; người chơi khác vẫn thấy câu hỏi của họ.
 
     public void OnAnsweredCorrectly()
     {
-        // TODO: xử lý riêng khi trả lời đúng, ví dụ:
-        // gameObject.SetActive(false);
+        HideAfterAnswer();
     }
 
     public void OnAnsweredWrong()
     {
-        // TODO: xử lý riêng khi trả lời sai, ví dụ:
-        // cho phép hỏi lại bằng cách đặt isTriggered = false;
+        HideAfterAnswer();
+    }
+
+    private void HideAfterAnswer()
+    {
+        Destroy(gameObject);
     }
 }
