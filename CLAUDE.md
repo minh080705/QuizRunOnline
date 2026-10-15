@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-QuizRunOnline ("Endless Runner 3D"): a multiplayer 3D obstacle-runner where hitting obstacles triggers quiz questions. Unity **2022.3.62f3**, URP 14, Photon Fusion 2 (**Shared mode**), Firebase Auth/Firestore, TextMeshPro. Game code is in `Assets/Scripts`; comments and Debug logs are mostly in Vietnamese.
+QuizRunOnline ("Endless Runner 3D"): a multiplayer 3D obstacle-runner where hitting obstacles triggers quiz questions. Unity **2022.3.62f3**, Photon Fusion 2 (**Shared mode**), Firebase Auth/Firestore, TextMeshPro. Game code is in `Assets/Scripts`; comments and Debug logs are mostly in Vietnamese.
 
 ## Build / run / test
 
@@ -22,6 +22,20 @@ There is no CLI build, lint, or test setup: no test assemblies and no `.asmdef` 
 - **RaceScene** is everything else: spawn players (`RaceScenePlayerSpawner`), obstacles, buffs, quiz, score, finish line, spectator, summary.
 - When adding or changing a script, decide which scene it lives in. Some singletons only exist in one scene (e.g. `SpawnEffect.Instance` only in RaceScene).
 
+## Script folders (`Assets/Scripts`)
+- `Core/` shared by every scene: `SceneNames`, `PlayerContext`, `SafeAreaFitter`, `UI_ConfirmDialog`, `UI_Notification`, `FrameRateSettings`, `FpsCounter`.
+- `Backend/Account/` Firebase auth and profile. `Lobby/` `LobbyManager`. `Menu/` and `Shop/` hold the UI of those scenes.
+- `Network/` Fusion code (rooms, players, `Spawner/`). `Spawning/` pure planning logic (`SpawnPlanner`, `SpawnProfile`).
+- `Race/World/` map and track pooling (`MapSpawner`, `TracksSpawner`, `WorldFocus`, `RaceTrackConfig`, `WorldCurvature`). `Race/HUD/` in-race UI (speedometer, lives, countdown, coin counter, leave button).
+- Other race features keep their own folder: `Player/`, `Camera/` (includes `RaceSpectatorManager`), `Question/`, `Buff/`, `Items/`, `Effects/`, `Inventory/`, `PlayerScore/` (includes `CoinCalculator`), `RaceFinish/`, `RaceProgress/`, `RaceSummary/`, `DistanceIndicator/`.
+- Move or rename scripts inside the Unity Project window (or with `git mv` on the file **and** its `.meta`) so GUIDs stay valid.
+
+## Rendering and performance
+- The project has the URP package, but **no URP asset is assigned** in Graphics or Quality settings, and the Profiler shows Built-in pipeline passes (`RenderForwardOpaque`). Treat it as the **Built-in Render Pipeline**: URP-only features (Render Scale, SRP Batcher, Volumes) do not apply. Check this before relying on them.
+- Android defaults to quality level **Medium** (VSync on), which locks the game to 30 FPS when a frame takes over 16.6 ms. `Core/FrameRateSettings` turns VSync off and sets `targetFrameRate = 60` on Android devices only.
+- `Core/FpsCounter` shows FPS in the Editor and Development Builds only. It uses uGUI because IMGUI (`OnGUI`) allocates every frame and skews GC Alloc readings in the Profiler.
+- Keep per-frame code allocation-free (no `new`, string concatenation, or `foreach` over `IReadOnlyList`/interfaces in `Update`/`LateUpdate`). Check GC Alloc in the Profiler (CPU Usage > Hierarchy).
+
 ## Architecture
 
 ### Networking lifecycle (spans several files)
@@ -34,7 +48,7 @@ There is no CLI build, lint, or test setup: no test assemblies and no `.asmdef` 
 - Shared race state lives in scene NetworkObjects with state authority on the master: `LeaderboardManager` (a `NetworkDictionary<PlayerRef, PlayerRaceEntry>` holding score, coins, deaths and name, written via RPC), `RaceResultManager` (finish order, RPCs) and `ObstacleSpawnPointGenerator`.
 
 ### Obstacles
-`ObstacleSpawnPointGenerator` (master only) generates a networked array of spawn **data** (`ObstacleSpawnPoint`, capacity 64) ahead of the leader. Spawn data comes from `RacePlayersRegistry.GetLeadingPlayer()`/`GetTrailingPlayer()`, which skip eliminated players. It also respects `RaceTrackConfig` finish-line clearance. `LocalObstacleSpawner` on each client instantiates **local, non-networked** obstacle GameObjects near the local player from that data. So obstacles are not NetworkObjects, and the prefab index must match `obstaclePrefabs` order in the spawner.
+`ObstacleSpawnPointGenerator` (master only) generates a networked array of spawn **data** (`NetworkArray<SpawnEntry>`, capacity 192; it must cover `spawnAheadDistance`, roughly 18 slots per 100 m, and changing it changes the network layout so every client must be rebuilt) ahead of the leader. Spawn data comes from `RacePlayersRegistry.GetLeadingPlayer()`/`GetTrailingPlayer()`, which skip eliminated players. It also respects `RaceTrackConfig` finish-line clearance. `LocalObstacleSpawner` on each client instantiates **local, non-networked** obstacle GameObjects near the local player from that data. So obstacles are not NetworkObjects, and the prefab index must match `obstaclePrefabs` order in the spawner.
 
 What goes into each row is planned by `Spawning/SpawnPlanner` (pure static logic, no MonoBehaviour or networking, Subway-Surfers style: difficulty rises with race progress, and every row must keep a reachable lane from the previous one). It is driven by a `SpawnProfile` asset, and `CoinPatternBuilder` expands coin patterns into single coins. The generator and `LocalObstacleSpawner` must reference the **same** `SpawnProfile` asset. The generator also has a debug path that calls `SpawnPlanner.Simulate` to check a plan without running a race.
 
