@@ -20,6 +20,13 @@ public class PlayerAnimation : MonoBehaviour
     [SerializeField] private string respawnStateName = "Cat_RunLong";
     [SerializeField] private float respawnCrossFade = 0.1f;
 
+    [Header("Trên bục trao giải")]
+    [Tooltip("Tên state ăn mừng (hạng 1). State này không có transition đi ra nên giữ nguyên tới hết cảnh trao giải.")]
+    [SerializeField] private string happyStateName = "Cat_IdleHappy";
+    [Tooltip("Tên state đứng yên (hạng 2 trở xuống), cũng là state nhân vật đang dùng khi dừng chạy.")]
+    [SerializeField] private string idleStateName = "Cat_Idle1";
+    [SerializeField] private float podiumCrossFade = 0.25f;
+
     private bool isDead = false;
 
     /// <summary>
@@ -77,6 +84,29 @@ public class PlayerAnimation : MonoBehaviour
         if (isDead) return;
         animator.ResetTrigger(HitWallParam);
         animator.SetTrigger(HitWallParam);
+    }
+
+    /// <summary>Hạng 1 trên bục: chạy animation Happy.</summary>
+    public void PlayHappy()
+    {
+        PlayPodiumState(happyStateName);
+    }
+
+    /// <summary>Hạng 2 trở xuống trên bục: chạy animation đứng yên (idle).</summary>
+    public void PlayIdle()
+    {
+        PlayPodiumState(idleStateName);
+    }
+
+    // Ép chuyển thẳng sang state theo tên (như ResetDeath) thay vì đặt tham số IsRaceFinnished: transition Any State của tham số
+    // đó bật "Can Transition To Self", nên giữ bool = true sẽ khiến animation Happy bị khởi động lại liên tục.
+    private void PlayPodiumState(string stateName)
+    {
+        if (isDead) return;
+
+        animator.ResetTrigger(JumpParam);
+        animator.ResetTrigger(SlideParam);
+        animator.CrossFadeInFixedTime(stateName, podiumCrossFade);
     }
 
     /// <summary>Gọi từ PlayerStats khi player chết. Chặn mọi animation khác sau đó.</summary>

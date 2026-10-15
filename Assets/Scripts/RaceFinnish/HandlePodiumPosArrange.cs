@@ -12,6 +12,10 @@ public class HandlePodiumPosArrange : MonoBehaviour
     [Header("Đồng bộ điểm")]
     [SerializeField] private float scoreSyncDelay = 1.5f;
 
+    [Header("Khi lên bục")]
+    [Tooltip("Xoay thêm quanh trục Y so với góc xoay của vị trí bục (độ). 180 = quay nhân vật lại để mặt hướng về camera.")]
+    [SerializeField] private float podiumYawOffset = 180f;
+
     [Header("Chờ nhân vật dừng hẳn")]
     [SerializeField] private float restSpeedThreshold = 0.02f;
     [SerializeField] private int restFixedFrames = 5;
@@ -106,7 +110,7 @@ public class HandlePodiumPosArrange : MonoBehaviour
 
         yield return WaitUntilAtRest(no.transform);
 
-        MoveToPodiumPosition(no, podium[rank]);
+        MoveToPodiumPosition(no, podium[rank], rank);
 
         // Local player đã lên bục xong -> báo cho camera chuyển sang cinematic
         yield return new WaitForSeconds(1f);
@@ -177,7 +181,8 @@ public class HandlePodiumPosArrange : MonoBehaviour
         return null;
     }
 
-    private void MoveToPodiumPosition(NetworkObject no, Transform targetPos)
+    // rank: 0 = hạng 1, 1 = hạng 2, ... (cùng chỉ số với podium[]).
+    private void MoveToPodiumPosition(NetworkObject no, Transform targetPos, int rank)
     {
         if (!no.HasStateAuthority)
         {
@@ -191,7 +196,28 @@ public class HandlePodiumPosArrange : MonoBehaviour
             return;
         }
 
-        nt.Teleport(targetPos.position, targetPos.rotation);
-        Debug.Log($"[Podium] moved {no.name} to {targetPos.position}, now at {no.transform.position}");
+        // 1. Tắt input điều khiển (vuốt/phím): người chơi không nhảy, trượt hay đổi làn được nữa khi đứng trên bục.
+        PlayerInput input = no.GetComponentInChildren<PlayerInput>(true);
+        if (input != null)
+            input.enabled = false;
+
+        // 2. Dịch chuyển lên bục và xoay thêm podiumYawOffset (180 độ) để mặt hướng về camera thay vì quay lưng.
+        nt.Teleport(targetPos.position, targetPos.rotation * Quaternion.Euler(0f, podiumYawOffset, 0f));
+
+        // 3. Animation: hạng 1 chạy Happy, hạng 2 trở xuống chạy idle. Qua PlayerNetworkState để máy khác cũng thấy.
+        bool isChampion = rank == 0;
+
+        PlayerAnimation playerAnim = no.GetComponentInChildren<PlayerAnimation>(true);
+        if (playerAnim != null)
+        {
+            if (isChampion) playerAnim.PlayHappy();
+            else playerAnim.PlayIdle();
+        }
+
+        PlayerNetworkState netState = no.GetComponentInChildren<PlayerNetworkState>(true);
+        if (netState != null)
+            netState.NotifyCelebrate(isChampion);
+
+        Debug.Log($"[Podium] moved {no.name} to {targetPos.position}, now at {no.transform.position}, hạng {rank + 1}");
     }
 }
