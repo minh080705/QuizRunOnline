@@ -16,9 +16,9 @@ There is no CLI build, lint, or test setup: no test assemblies and no `.asmdef` 
 
 ## Scene flow
 
-`AccountScene` (login) → `ShopScene` (optional) or `LobbyScene` (rooms) → `RaceScene` (race). Names are constants in `Account/SceneNames.cs` and must match Build Settings. `RaceExit` returns to the lobby.
+`AccountScene` (login) → `ShopScene` (optional) or `LobbyScene` (rooms) → `RaceScene` (race). Names are constants in `Core/SceneNames.cs` and must match Build Settings. `RaceExit` returns to the lobby.
 
-- **LobbyScene** is room creation and joining: `NetWork/LobbyManager`, `NetWork/Room/*`, `NetWork/Player/*` (PlayerRoomData, PlayerRowUI, ...).
+- **LobbyScene** is room creation and joining: `Lobby/LobbyManager`, `Network/Room/*`, `Network/Player/*` (PlayerRoomData, PlayerRowUI, ...).
 - **RaceScene** is everything else: spawn players (`RaceScenePlayerSpawner`), obstacles, buffs, quiz, score, finish line, spectator, summary.
 - When adding or changing a script, decide which scene it lives in. Some singletons only exist in one scene (e.g. `SpawnEffect.Instance` only in RaceScene).
 
@@ -41,7 +41,7 @@ What goes into each row is planned by `Spawning/SpawnPlanner` (pure static logic
 ### Quiz and scoring pipeline
 - Hitting an obstacle: `QuestionTrigger` calls `QuestionManager.Instance.ShowQuestion(...)`. The manager loads `Resources/questions.json` (each question has a `category`: `math` or `english`) and picks from the pool matching the trigger's `QuestionCategory` (set per prefab: `MathQuestion` = Math, `EnglishQuestion 1` = English, `Any` = mixed) through a shuffled bag, so a question does not repeat until its pool is exhausted. It then runs the answer timer, applies speed buff / slow debuff, and reports an `AnswerResult`.
 - `PlayerScoreManager` holds the **local** player's total score. Every source (quiz, coin, rank bonus) must go through its private `AddScore()`; add a new source by extending the `ScoreSource` enum and adding a rule asset (see the class doc comment). Rules are ScriptableObjects (`IScoreRule<TInput>`: `QuizScoreRule`, `RankBonusRule`) in `Assets/Data/ScoreRules`.
-- `PlayerScoreManager` deliberately has **no Fusion dependency**. `PlayerScoreNetworkReporter` bridges it, plus `CoinCaculator` and `PlayerLives`, to `LeaderboardManager.ReportStats`. Keep that separation.
+- `PlayerScoreManager` deliberately has **no Fusion dependency**. `PlayerScoreNetworkReporter` bridges it, plus `CoinCalculator` and `PlayerLives`, to `LeaderboardManager.ReportStats`. Keep that separation.
 
 ### Buffs
 `Buff` is an abstract ScriptableObject (assets in `Assets/Data/Buffs`) with `OnFirstApplied` and `OnStackChanged`. `PlayerBuffManager` handles stacking and expiry, and `BuffContext` is a small key/value bag shared across hooks. Concrete buffs are in `Buff/Types of Buffs`; pickup items are in `Items/BuffItems`.
@@ -58,5 +58,4 @@ What goes into each row is planned by `Spawning/SpawnPlanner` (pure static logic
 - Scene `NetworkObject`s may spawn after `Start()`. Code that depends on one (e.g. `LeaderboardManager.Instance`) should wait for it, as `PlayerScoreNetworkReporter` does.
 - Edit scenes and prefabs through the Unity Editor; they are serialized YAML and conflict easily. Keep `.meta` files with their assets.
 - **Prefabs spawned at runtime (the character prefab, via `RaceScenePlayerSpawner`) cannot hold references to scene objects.** A `[SerializeField]` pointing at a scene object (camera, `CameraShake`, UI) stays `{fileID: 0}` on the prefab, and `if (x != null)` guards then fail silently. Resolve such references at runtime (`FindObjectOfType`, `PlayerContext.OnLocalPlayerReady`, a singleton `Instance`). `PlayerCollisionHandler` finds `CameraShake` this way.
-- `Assets/Scripts/Editor/Build*UI.cs` are menu tools (`Tools/UI/Build Lobby UI` and so on, built on `UIBuildKit`) that generate Canvas UI. They create new objects suffixed ` (Generated)` and disable (not delete) the old ones, and they refuse to run in Play mode. Prefer re-running them over hand-editing generated UI.
 - `Assets/Photon`, `Assets/Firebase`, `Assets/ExternalDependencyManager`, `Assets/GoogleSignIn` and the many asset-pack folders are third-party; don't modify them.
