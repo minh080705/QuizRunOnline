@@ -20,9 +20,11 @@ public class ObstacleSpawnPointGenerator : NetworkBehaviour
     [Tooltip("Số hàng tối đa lập kế hoạch trong một tick (tránh dồn việc khi mới vào trận).")]
     [SerializeField] private int maxRowsPerTick = 6;
 
-    private const int Capacity = 96;
+    // Số slot dữ liệu spawn trên mạng. Phải khớp giá trị trong [Capacity(...)] bên dưới (attribute cần hằng số nguyên trực tiếp).
+    // Nhìn xa hơn (Spawn Ahead Distance lớn) cần nhiều slot hơn: khoảng 18 slot cho mỗi 100 m đường.
+    private const int Capacity = 192;
 
-    [Networked, Capacity(96)] public NetworkArray<SpawnEntry> Entries => default;
+    [Networked, Capacity(192)] public NetworkArray<SpawnEntry> Entries => default;
     [Networked] private PlannerState State { get; set; }
 
     private readonly List<SpawnEntry> plan = new List<SpawnEntry>(16);
