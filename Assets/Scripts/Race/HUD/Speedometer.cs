@@ -9,6 +9,7 @@ public class Speedometer : MonoBehaviour
     private PlayerStats stats;
     [SerializeField] private TextMeshProUGUI TextMeshPro;
     float playerVelocity = 0f;
+    float lastShownVelocity = -1f; // -1: chưa hiển thị lần nào (tốc độ không bao giờ âm)
 
     void OnEnable()
     {
@@ -17,6 +18,7 @@ public class Speedometer : MonoBehaviour
         // Bắt đầu mỗi ván từ 0, chờ player mới đăng ký (không dùng lại stats của ván trước).
         stats = null;
         playerVelocity = 0f;
+        lastShownVelocity = -1f;
         if (TextMeshPro != null) TextMeshPro.text = "0 km/h";
 
         // Player có thể đã đăng ký trước khi Speedometer bật (lỡ sự kiện): lấy luôn nếu còn sống.
@@ -46,7 +48,11 @@ public class Speedometer : MonoBehaviour
 
         GetPlayerVelocity();
 
-        TextMeshPro.text = Math.Round(playerVelocity, 2) + " km/h";
+        // Làm tròn 2 chữ số, chỉ đổi chữ khi giá trị hiển thị thật sự đổi. SetText với định dạng không nối chuỗi nên không tạo rác.
+        float shown = (float)Math.Round(playerVelocity, 2);
+        if (shown == lastShownVelocity) return;
+        lastShownVelocity = shown;
+        TextMeshPro.SetText("{0:2} km/h", shown);
     }
     public void GetPlayerVelocity()
     {

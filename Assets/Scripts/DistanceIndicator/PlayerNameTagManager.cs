@@ -92,8 +92,11 @@ public class PlayerNameTagManager : MonoBehaviour
         FindPodiumIfNeeded();
 
         _seen.Clear();
-        foreach (PlayerStats p in registry.GetAllPlayers())
+        // Duyệt theo chỉ số (không foreach): GetAllPlayers trả IReadOnlyList nên foreach sẽ tạo enumerator mới mỗi frame (rác GC).
+        IReadOnlyList<PlayerStats> players = registry.GetAllPlayers();
+        for (int i = 0; i < players.Count; i++)
         {
+            PlayerStats p = players[i];
             if (p == null || p.Object == null || !p.Object.IsValid) continue;
 
             int slot = podium != null ? podium.GetPodiumSlot(p.transform.position, podiumRadius) : -1;

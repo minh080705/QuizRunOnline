@@ -64,20 +64,24 @@ public class HandlePodiumPosArrange : MonoBehaviour
     /// </summary>
     public int GetPodiumSlot(Vector3 position, float radius)
     {
-        Transform[] slots = { championPos, runnerupPos, thirdplacePos };
+        // Không tạo mảng tạm: hàm này được gọi mỗi frame cho từng người chơi (tránh rác GC).
         int best = -1;
         float bestSqr = radius * radius;
-        for (int i = 0; i < slots.Length; i++)
-        {
-            if (slots[i] == null) continue;
-            float sqr = (slots[i].position - position).sqrMagnitude;
-            if (sqr <= bestSqr)
-            {
-                bestSqr = sqr;
-                best = i;
-            }
-        }
+        TryPickSlot(championPos, 0, position, ref best, ref bestSqr);
+        TryPickSlot(runnerupPos, 1, position, ref best, ref bestSqr);
+        TryPickSlot(thirdplacePos, 2, position, ref best, ref bestSqr);
         return best;
+    }
+
+    private static void TryPickSlot(Transform slot, int index, Vector3 position, ref int best, ref float bestSqr)
+    {
+        if (slot == null) return;
+        float sqr = (slot.position - position).sqrMagnitude;
+        if (sqr <= bestSqr)
+        {
+            bestSqr = sqr;
+            best = index;
+        }
     }
 
     private void HandleRaceFinish()
