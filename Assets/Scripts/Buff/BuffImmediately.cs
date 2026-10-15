@@ -2,9 +2,9 @@
 using UnityEngine;
 
 // dùng để gọi buff ngay lập tức trên người player
-public class BuffImidiately : MonoBehaviour
+public class BuffImmediately : MonoBehaviour
 {
-    public static BuffImidiately Instance { get; private set; }
+    public static BuffImmediately Instance { get; private set; }
 
     [SerializeField] private PlayerStats player;
     [SerializeField] private PlayerCollisionHandler playerCollisionHandler;
@@ -195,10 +195,10 @@ public class BuffImidiately : MonoBehaviour
     {
         if (currentCoinStack == 0)
         {
-            CoinCaculator.Instance.multiplier = 1;
+            CoinCalculator.Instance.multiplier = 1;
             return;
         }
 
-        CoinCaculator.Instance.multiplier = (int)Mathf.Pow(coinBuffMultiplier, currentCoinStack);
+        CoinCalculator.Instance.multiplier = (int)Mathf.Pow(coinBuffMultiplier, currentCoinStack);
     }
 }

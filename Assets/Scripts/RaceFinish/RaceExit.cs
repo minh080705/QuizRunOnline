@@ -19,10 +19,10 @@ public static class RaceExit
         try
         {
             // Lưu coin kiếm được (nếu chưa lưu) rồi reset bộ đếm để ván sau bắt đầu từ 0.
-            if (CoinCaculator.Instance != null)
+            if (CoinCalculator.Instance != null)
             {
-                await CoinCaculator.Instance.FlushToProfileAsync();
-                CoinCaculator.Instance.ResetSession();
+                await CoinCalculator.Instance.FlushToProfileAsync();
+                CoinCalculator.Instance.ResetSession();
             }
 
             if (LobbyManager.Instance != null)

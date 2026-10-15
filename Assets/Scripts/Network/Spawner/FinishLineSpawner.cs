@@ -8,7 +8,7 @@ using UnityEngine;
 /// Là scene object có NetworkObject (giống ObstacleSpawnPointGenerator): trong Shared mode chỉ máy
 /// có StateAuthority (Master) chạy logic spawn, object spawn ra được Fusion replicate cho mọi máy.
 /// </summary>
-public class FinnishLineSpawner : NetworkBehaviour
+public class FinishLineSpawner : NetworkBehaviour
 {
     [Header("Prefab vạch đích (phải có NetworkObject + FinishLine)")]
     [SerializeField] private NetworkPrefabRef finishLinePrefab;
@@ -35,7 +35,7 @@ public class FinnishLineSpawner : NetworkBehaviour
     private bool warnedMissingConfig;
 
     /// <summary>Scene object có mặt trên mọi máy; FinishLine (prefab) dùng nó để đặt podium khi Spawned().</summary>
-    public static FinnishLineSpawner Instance { get; private set; }
+    public static FinishLineSpawner Instance { get; private set; }
 
     public override void Spawned()
     {
@@ -66,7 +66,7 @@ public class FinnishLineSpawner : NetworkBehaviour
             if (!warnedMissingConfig)
             {
                 warnedMissingConfig = true;
-                Debug.LogError("[FinnishLineSpawner] Không có RaceTrackConfig trong scene, không biết spawn vạch đích ở đâu.");
+                Debug.LogError("[FinishLineSpawner] Không có RaceTrackConfig trong scene, không biết spawn vạch đích ở đâu.");
             }
             return;
         }
@@ -85,7 +85,7 @@ public class FinnishLineSpawner : NetworkBehaviour
     {
         if (!finishLinePrefab.IsValid)
         {
-            Debug.LogError("[FinnishLineSpawner] Chưa gán prefab vạch đích (Board.001).");
+            Debug.LogError("[FinishLineSpawner] Chưa gán prefab vạch đích (Board.001).");
             FinishSpawned = true; // tránh báo lỗi lặp mỗi tick
             return;
         }
@@ -105,10 +105,10 @@ public class FinnishLineSpawner : NetworkBehaviour
                 if (line != null)
                     line.SetSpawnPose(position, rotation);
                 else
-                    Debug.LogError("[FinnishLineSpawner] Prefab vạch đích không có component FinishLine.");
+                    Debug.LogError("[FinishLineSpawner] Prefab vạch đích không có component FinishLine.");
             });
         FinishSpawned = true;
 
-        Debug.Log($"[FinnishLineSpawner] Đã spawn vạch đích tại Z={finishZ}.");
+        Debug.Log($"[FinishLineSpawner] Đã spawn vạch đích tại Z={finishZ}.");
     }
 }

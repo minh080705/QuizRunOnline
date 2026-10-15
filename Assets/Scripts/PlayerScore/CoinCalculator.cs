@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class CoinCaculator : MonoBehaviour
+public class CoinCalculator : MonoBehaviour
 {
     public int multiplier = 1 ;
-    public static CoinCaculator Instance { get; private set; }
+    public static CoinCalculator Instance { get; private set; }
     int tol = 0;
     int savedCoins = 0; // phần của tol đã ghi lên hồ sơ
 
@@ -67,7 +67,7 @@ public class CoinCaculator : MonoBehaviour
     {
         tol += coinValue * multiplier;
         OnCoinChanged?.Invoke(tol); 
-        Debug.Log("Caculator: Total coins: " + GetTotalCoin());
+        Debug.Log("CoinCalculator: Total coins: " + GetTotalCoin());
     }
     public int GetTotalCoin()
     {

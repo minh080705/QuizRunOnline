@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Cầu nối giữa các nguồn số liệu LOCAL (PlayerScoreManager, CoinCaculator, PlayerLives - không biết gì về
+/// Cầu nối giữa các nguồn số liệu LOCAL (PlayerScoreManager, CoinCalculator, PlayerLives - không biết gì về
 /// network) và LeaderboardManager (network, tổng hợp số liệu của mọi người). Đặt script này
 /// TRÊN CÙNG OBJECT hoặc 1 object riêng trong scene của LOCAL PLAYER.
 ///
@@ -70,7 +70,7 @@ public class PlayerScoreNetworkReporter : MonoBehaviour
     {
         if (LeaderboardManager.Instance == null || PlayerScoreManager.Instance == null) return;
 
-        int coins = CoinCaculator.Instance != null ? CoinCaculator.Instance.GetTotalCoin() : 0;
+        int coins = CoinCalculator.Instance != null ? CoinCalculator.Instance.GetTotalCoin() : 0;
 
         PlayerLives lives = PlayerLives.Local;
         int deaths = lives != null ? lives.Deaths : 0;

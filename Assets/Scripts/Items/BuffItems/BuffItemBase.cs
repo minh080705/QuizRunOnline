@@ -16,8 +16,8 @@ public abstract class BuffItemBase : MonoBehaviour
             ApplyBuff(collision.gameObject);
 
             // chạy hiệu ứng
-            BuffImidiately effect =
-                collision.GetComponent<BuffImidiately>();
+            BuffImmediately effect =
+                collision.GetComponent<BuffImmediately>();
 
             if (effect != null && buffEffectPrefab != null)
             {

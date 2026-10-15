@@ -6,7 +6,7 @@ using UnityEngine;
 /// Tạo asset: Create > Buffs > Coin Buff (đặt trong Assets/Data/Buffs), rồi gán cho prefab CoinBuffItem.
 /// Mỗi stack thêm tăng bán kính; thời gian và số stack tối đa lấy từ buffDuration / maxStack của lớp Buff.
 /// Không dùng ô Buff Effect Prefab của lớp Buff (bị ẩn trên Inspector): model nam châm có ô Magnet Model riêng.
-/// Không đụng tới hệ số nhân xu (CoinCaculator.multiplier) của BuffImidiately.BuffDoubleCoin cũ.
+/// Không đụng tới hệ số nhân xu (CoinCalculator.multiplier) của BuffImmediately.BuffDoubleCoin cũ.
 /// </summary>
 [CreateAssetMenu(fileName = "CoinBuff", menuName = "Buffs/Coin Buff")]
 public class CoinBuff : Buff

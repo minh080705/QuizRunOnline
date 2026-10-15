@@ -120,7 +120,7 @@ public class PlayerNameTagManager : MonoBehaviour
         }
     }
 
-    // Bục có thể đang tắt trong scene lúc khởi động (FinnishLineSpawner bật nó lên sau), nên tìm lười, kể cả object inactive.
+    // Bục có thể đang tắt trong scene lúc khởi động (FinishLineSpawner bật nó lên sau), nên tìm lười, kể cả object inactive.
     private void FindPodiumIfNeeded()
     {
         if (podium != null || Time.unscaledTime < _nextPodiumSearch) return;

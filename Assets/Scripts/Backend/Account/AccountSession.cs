@@ -9,8 +9,8 @@ public static class AccountSession
     /// <summary>Lưu coin chưa ghi, dọn kết nối mạng rồi quay về AccountScene (vẫn giữ đăng nhập).</summary>
     public static async Task GoToAccountAsync()
     {
-        if (CoinCaculator.Instance != null)
-            await CoinCaculator.Instance.FlushToProfileAsync();
+        if (CoinCalculator.Instance != null)
+            await CoinCalculator.Instance.FlushToProfileAsync();
 
         if (LobbyManager.Instance != null)
             await LobbyManager.Instance.TeardownAsync();
@@ -24,8 +24,8 @@ public static class AccountSession
         if (UserProfileService.Instance != null)
             UserProfileService.Instance.Clear();
 
-        if (CoinCaculator.Instance != null)
-            CoinCaculator.Instance.ResetSession();
+        if (CoinCalculator.Instance != null)
+            CoinCalculator.Instance.ResetSession();
 
         LocalPlayerSelection.CharacterIndex = 0;
         LocalPlayerSelection.SkinIndex = 0;

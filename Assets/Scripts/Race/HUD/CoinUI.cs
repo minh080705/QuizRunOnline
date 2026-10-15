@@ -7,19 +7,19 @@ public class CoinUI : MonoBehaviour
 
     void OnEnable()
     {
-        CoinCaculator.OnCoinChanged += UpdateCoinText;
+        CoinCalculator.OnCoinChanged += UpdateCoinText;
     }
 
     void OnDisable()
     {
-        CoinCaculator.OnCoinChanged -= UpdateCoinText;
+        CoinCalculator.OnCoinChanged -= UpdateCoinText;
     }
 
     void Start()
     {
         // Hiển thị giá trị hiện tại ngay khi vào scene
-        if (CoinCaculator.Instance != null)
-            UpdateCoinText(CoinCaculator.Instance.GetTotalCoin());
+        if (CoinCalculator.Instance != null)
+            UpdateCoinText(CoinCalculator.Instance.GetTotalCoin());
     }
 
     void UpdateCoinText(int newTotal)

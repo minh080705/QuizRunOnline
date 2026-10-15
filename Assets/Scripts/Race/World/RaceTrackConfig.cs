@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Nguồn dữ liệu chung cho đường đua: Z của vạch xuất phát và vạch đích, định sẵn từ đầu trận.
 /// Đặt trong RaceScene (không cần mạng: mọi máy load cùng scene nên cùng giá trị).
-/// FinnishLineSpawner dùng để biết spawn vạch đích ở đâu, thanh tiến trình dùng để tính tỉ lệ quãng đường.
+/// FinishLineSpawner dùng để biết spawn vạch đích ở đâu, thanh tiến trình dùng để tính tỉ lệ quãng đường.
 /// </summary>
 public class RaceTrackConfig : MonoBehaviour
 {

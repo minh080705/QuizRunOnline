@@ -2,7 +2,7 @@ using Fusion;
 using UnityEngine;
 
 /// <summary>
-/// NetworkObject đặt tại vạch đích (spawn bởi FinnishLineSpawner khi người dẫn đầu tới gần).
+/// NetworkObject đặt tại vạch đích (spawn bởi FinishLineSpawner khi người dẫn đầu tới gần).
 /// Mỗi máy tự phát hiện va chạm của ĐÚNG player do máy đó điều khiển, rồi báo cho RaceResultManager
 /// (scene object luôn tồn tại) - việc xếp hạng nằm ở đó vì người chơi có thể bị loại trước khi vạch đích xuất hiện.
 /// </summary>
@@ -29,9 +29,9 @@ public class FinishLine : NetworkBehaviour
         if (HasSpawnPose)
             Object.transform.SetPositionAndRotation(SpawnPosition, SpawnRotation);
 
-        // Podium (trong RaceScene) được thả vào FinnishLineSpawner: dời tới sát vạch đích vừa xuất hiện.
-        if (FinnishLineSpawner.Instance != null)
-            FinnishLineSpawner.Instance.PlacePodium(Object.transform.position);
+        // Podium (trong RaceScene) được thả vào FinishLineSpawner: dời tới sát vạch đích vừa xuất hiện.
+        if (FinishLineSpawner.Instance != null)
+            FinishLineSpawner.Instance.PlacePodium(Object.transform.position);
     }
 
     private void OnTriggerEnter(Collider other)
