@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ed5114d524968c409c7d43eb744be91, type: 3}
   m_Name: RankBonusRule
   m_EditorClassIdentifier: 
-  bonusByRank: f4010000c800000064000000
+  bonusByRank: 960000006400000032000000
   defaultBonus: 0

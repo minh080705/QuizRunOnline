@@ -19,17 +19,17 @@ MonoBehaviour:
     prefab:
       RawGuidValue: 50d92d0297535804b8100e12839c7456
     skins:
-    - displayName: "M\u1EB7c \u0111\u1ECBnh - Default"
+    - displayName: Cam
       icon: {fileID: 21300000, guid: b8704688639e7f94ca946d50b98951be, type: 3}
       price: 0
       material: {fileID: 2100000, guid: 28a3c8fe40369b041b9d33a917f2c516, type: 2}
-    - displayName: "\u0110en - Black"
+    - displayName: "\u0110en "
       icon: {fileID: 21300000, guid: 2640380a931041349b5ced399962a3aa, type: 3}
-      price: 0
+      price: 200
       material: {fileID: 2100000, guid: 644756ab33442d0428b5f2a800727281, type: 2}
-    - displayName: "V\u1EB1n "
+    - displayName: "V\u1EB1n"
       icon: {fileID: 21300000, guid: a6b878ad96f9d2446864400de5685ab3, type: 3}
-      price: 0
+      price: 50
       material: {fileID: 2100000, guid: bb11294bf75124146b43ec9b3308fc5e, type: 2}
   - displayName: "G\u1EA5u m\xE8o - Raccon"
     icon: {fileID: 21300000, guid: 5e61fec3f8e7bbb4c950b3641c53c1ce, type: 3}
