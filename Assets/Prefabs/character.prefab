@@ -142,6 +142,9 @@ MonoBehaviour:
   playerStats: {fileID: 1428434738204372398}
   respawnStateName: Cat_RunLong
   respawnCrossFade: 0.1
+  happyStateName: Cat_IdleHappy
+  idleStateName: Cat_Idle1
+  podiumCrossFade: 0.25
 --- !u!114 &8081633757561956898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,6 +182,7 @@ MonoBehaviour:
   obstacleTag: Obstacle
   shakeDuration: 0.3
   shakeMagnitude: 0.2
+  hitEffect: {fileID: 484368387861551534, guid: 9b21333b068a5084ba09535839bee3c8, type: 3}
   isShieldOn: 0
 --- !u!114 &1428434738204372398
 MonoBehaviour:
@@ -460,10 +464,19 @@ MonoBehaviour:
   playerAnimation: {fileID: 0}
   stats: {fileID: 0}
   playerJump: {fileID: 0}
+  proxyLeadEnabled: 1
+  latencyScale: 0.9
+  baseLead: 0.05
+  maxLead: 0.25
+  leadSmoothTime: 0.15
+  debugProxyLead: 0
   _Speed: 0
+  _PingMs: 0
   _IsJumping:
     RawValue: 0
   _IsDead:
+    RawValue: 0
+  _IsCelebrating:
     RawValue: 0
   _JumpCount: 0
   _SlideCount: 0
@@ -697,7 +710,7 @@ Transform:
   m_GameObject: {fileID: 7514829177251599417}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -712,7 +725,7 @@ SkinnedMeshRenderer:
   m_GameObject: {fileID: 7514829177251599417}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
@@ -723,7 +736,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 644756ab33442d0428b5f2a800727281, type: 2}
+  - {fileID: 2100000, guid: 28a3c8fe40369b041b9d33a917f2c516, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

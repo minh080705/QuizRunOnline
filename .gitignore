@@ -110,3 +110,7 @@ Assets/Firebase/Plugins/x86_64/FirebaseCppApp-13_17_0.bundle
 # Cấu hình editor/IDE cá nhân, không đưa lên repo
 .vscode/
 .vsconfig
+
+# Cấu hình Firebase (không đưa lên repo công khai)
+Assets/Resources/google-services.json*
+Assets/StreamingAssets/google-services-desktop.json*

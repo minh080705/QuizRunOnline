@@ -125,7 +125,7 @@ public class CoinItem : MonoBehaviour
             return;
 
         collected = true;
-        CoinCaculator.Instance.UpdateTotalCoin(coinValue);
+        CoinCalculator.Instance.UpdateTotalCoin(coinValue);
 
         // Hiệu ứng đi theo nhân vật vừa nhặt; không là con của coin nên vẫn chạy khi coin bị Destroy.
         SpawnEffect.PlayFollowing(pickupEffect, player, effectOffset);
