@@ -6,9 +6,6 @@ using UnityEngine;
 /// 1. Tắt collider NGAY (không ăn thêm coin/quiz sau vạch đích)
 /// 2. Cho chạy tiếp coastDuration giây
 /// 3. Dừng di chuyển, ẩn nhân vật, kích hoạt chế độ spectator
-///
-/// KHÔNG còn là singleton: mỗi nhân vật có 1 bản, FinishLine tìm đúng bản
-/// của nhân vật local qua PlayerContext.
 /// </summary>
 public class PlayerFinishHandler : MonoBehaviour
 {
@@ -26,7 +23,6 @@ public class PlayerFinishHandler : MonoBehaviour
     [Tooltip("Model/mesh của nhân vật - SetActive(false) sau coastDuration. Không tắt cả root vì root còn giữ NetworkObject/script khác.")]
     [SerializeField] private GameObject characterVisual;
 
-  
     private bool hasFinished = false;
 
     /// <summary>true khi nhân vật đã được ghi nhận về đích (PlayerLives dùng để không hồi sinh nữa).</summary>
@@ -49,7 +45,6 @@ public class PlayerFinishHandler : MonoBehaviour
         yield return new WaitForSeconds(coastDuration);
 
         StopMovement();
-        //HideCharacter();
         SwitchToSpectatorCamera();
     }
 
@@ -75,7 +70,6 @@ public class PlayerFinishHandler : MonoBehaviour
     }
     private void MoveToStage()
     {
-
     }
     private void SwitchToSpectatorCamera()
     {

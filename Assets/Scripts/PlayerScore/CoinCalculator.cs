@@ -67,7 +67,6 @@ public class CoinCalculator : MonoBehaviour
     {
         tol += coinValue * multiplier;
         OnCoinChanged?.Invoke(tol); 
-        Debug.Log("CoinCalculator: Total coins: " + GetTotalCoin());
     }
     public int GetTotalCoin()
     {

@@ -95,11 +95,8 @@ public class UserProfileService : MonoBehaviour
             () => Current.coins += amount);
     }
 
-    // =========================================================
-    // SỞ HỮU (một chỗ duy nhất quyết định đồ nào "đã có")
     // Giá 0 = mở sẵn; còn lại phải nằm trong danh sách đã mua của hồ sơ.
     // Chưa có hồ sơ (test thẳng Lobby không đăng nhập) thì chỉ đồ miễn phí được coi là có.
-    // =========================================================
 
     public static string SkinKey(int characterIndex, int skinIndex) => $"{characterIndex}:{skinIndex}";
 
@@ -132,10 +129,6 @@ public class UserProfileService : MonoBehaviour
         return OwnsSkin(characterIndex, skin) ? skin : 0;
     }
 
-    // =========================================================
-    // CHỌN
-    // =========================================================
-
     /// <summary>Lưu nhân vật đang chọn (chỉ nhận nhân vật đã sở hữu).</summary>
     public async Task<bool> SetSelectedCharacterAsync(int characterIndex)
     {
@@ -160,10 +153,6 @@ public class UserProfileService : MonoBehaviour
             new Dictionary<string, object> { { "selectedSkins", updated } },
             () => Current.selectedSkins = updated);
     }
-
-    // =========================================================
-    // MUA (trừ xu)
-    // =========================================================
 
     public enum PurchaseResult { Success, NotEnoughCoins, AlreadyOwned, InvalidItem, Failed }
 

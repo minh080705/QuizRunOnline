@@ -1,16 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// UI DEMO hiển thị bảng xếp hạng - đọc từ LeaderboardManager.
-/// Dùng cách đơn giản nhất cho demo: poll (kiểm tra lại) định kỳ mỗi
-/// refreshInterval giây, KHÔNG dùng cơ chế change-detection phức tạp của
-/// Fusion cho NetworkDictionary. Với leaderboard vài chục người, chi phí
-/// polling này không đáng kể.
-///
-/// Dùng Object Pool đơn giản cho các dòng (row) để tránh Instantiate/Destroy
-/// liên tục mỗi lần refresh - tái sử dụng lại các row đã tạo.
-/// </summary>
+/// <summary>Hiển thị bảng xếp hạng từ LeaderboardManager: làm mới định kỳ mỗi refreshInterval giây và tái sử dụng các dòng đã tạo.</summary>
 public class LeaderboardUI : MonoBehaviour
 {
     [Header("References")]
@@ -40,20 +31,17 @@ public class LeaderboardUI : MonoBehaviour
 
         List<LeaderboardEntry> entries = LeaderboardManager.Instance.GetSortedScores();
 
-        // Đảm bảo đủ số row cần thiết (tái sử dụng row cũ, tạo thêm nếu thiếu)
         while (activeRows.Count < entries.Count)
         {
             LeaderboardRow newRow = Instantiate(rowPrefab, rowContainer);
             activeRows.Add(newRow);
         }
 
-        // Ẩn bớt row thừa nếu số người chơi giảm (ví dụ có người rời phòng)
         for (int i = 0; i < activeRows.Count; i++)
         {
             activeRows[i].gameObject.SetActive(i < entries.Count);
         }
 
-        // Đổ dữ liệu vào từng row theo thứ hạng đã sắp xếp sẵn
         for (int i = 0; i < entries.Count; i++)
         {
             // Tên người chơi (lấy từ hồ sơ đăng nhập) do LeaderboardManager đồng bộ cùng điểm.

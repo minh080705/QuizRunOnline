@@ -45,7 +45,6 @@ public class InventoryUI : MonoBehaviour
 
     private void BindInventory(InventoryManager inv)
     {
-        
         if (inventoryManager != null)
         {
             inventoryManager.OnInventoryChanged -= RefreshUI; // gỡ đăng ký cũ, tránh trùng lặp
@@ -80,7 +79,6 @@ public class InventoryUI : MonoBehaviour
         {
             Buff item = inventoryManager.GetItemAt(i);
                 
-          
             if (item != null && item.icon != null)
             {
                 slotIcons[i].sprite = item.icon;

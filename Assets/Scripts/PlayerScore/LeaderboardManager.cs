@@ -3,27 +3,14 @@ using Fusion;
 using UnityEngine;
 
 /// <summary>
-/// Network Object DUY NHẤT quản lý số liệu của TOÀN BỘ người chơi (điểm, xu, số lần chết, tên).
-/// - Giữ 1 NetworkDictionary (PlayerRef -> PlayerRaceEntry), Fusion TỰ ĐỘNG đồng bộ
-///   giá trị này từ StateAuthority (host) xuống mọi client, không cần code
-///   thêm để "gửi" xuống các máy khác.
-/// - Chỉ StateAuthority được phép GHI vào dictionary (qua RPC), tránh xung
-///   đột nếu nhiều máy cùng ghi 1 lúc.
-/// - Đây là NetworkObject riêng biệt, KHÔNG phải PlayerScoreManager (vẫn giữ
-///   nguyên là điểm local từng máy) - LeaderboardManager chỉ đứng ra
-///   TỔNG HỢP số liệu báo về từ các máy, không tự tính gì.
-/// - Mọi chỉ số của một người nằm chung 1 struct nên được cập nhật cùng lúc (nguyên tử):
-///   bảng xếp hạng và bảng tổng kết trận không bao giờ thấy điểm mới đi kèm xu cũ.
-///
-/// Setup: tạo 1 Prefab rỗng, gắn NetworkObject + script này, Spawn 1 LẦN DUY
-/// NHẤT bởi host lúc bắt đầu trận (Runner.Spawn), hoặc đặt sẵn làm Scene
-/// Object nếu dùng Fusion Shared/Host mode với 1 scene cố định.
+/// NetworkObject duy nhất tổng hợp số liệu của mọi người chơi (điểm, xu, số lần chết, tên) trong một NetworkDictionary.
+/// Các máy báo số liệu qua RPC, chỉ StateAuthority (Master) ghi, Fusion đồng bộ xuống các máy còn lại.
+/// Mỗi người một struct nên các chỉ số luôn được cập nhật cùng lúc. Đặt sẵn trong RaceScene.
 /// </summary>
 public class LeaderboardManager : NetworkBehaviour
 {
     public static LeaderboardManager Instance { get; private set; }
 
-    // Capacity = số người chơi tối đa hỗ trợ. Chỉnh theo nhu cầu game.
     [Networked, Capacity(16)]
     private NetworkDictionary<PlayerRef, PlayerRaceEntry> Entries => default;
 
@@ -65,7 +52,7 @@ public class LeaderboardManager : NetworkBehaviour
     }
 
     /// <summary>
-    /// Gọi hàm này từ máy local (client hoặc host) mỗi khi số liệu của player
+    /// Gọi hàm này từ máy local mỗi khi số liệu của player
     /// TRÊN MÁY ĐÓ thay đổi. Bên trong sẽ tự gửi RPC lên StateAuthority.
     /// </summary>
     public void ReportStats(int totalScore, int coins, int deaths)
@@ -76,8 +63,6 @@ public class LeaderboardManager : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     private void RPC_ReportStats(PlayerRef player, int totalScore, int coins, int deaths, string displayName)
     {
-        // Chỉ StateAuthority chạy dòng này -> ghi vào NetworkDictionary,
-        // Fusion tự động replicate giá trị mới xuống mọi client sau đó.
         Entries.Set(player, new PlayerRaceEntry
         {
             Score = totalScore,
@@ -87,12 +72,6 @@ public class LeaderboardManager : NetworkBehaviour
         });
     }
 
-    /// <summary>
-    /// Trả về danh sách đã sắp xếp theo điểm giảm dần, dùng để hiển thị UI.
-    /// Hòa điểm thì theo PlayerId để thứ tự luôn giống nhau trên mọi máy.
-    /// Có thể gọi từ bất kỳ máy nào (client lẫn host) vì Entries đã được
-    /// Fusion đồng bộ sẵn.
-    /// </summary>
     public List<LeaderboardEntry> GetSortedScores()
     {
         var result = new List<LeaderboardEntry>();
@@ -113,6 +92,9 @@ public class LeaderboardManager : NetworkBehaviour
         {
             int byScore = b.Score.CompareTo(a.Score);
             return byScore != 0 ? byScore : a.Player.PlayerId.CompareTo(b.Player.PlayerId);
+/// <summary>
+/// Danh sách theo điểm giảm dần; hòa điểm xếp theo PlayerId để thứ tự giống nhau trên mọi máy.
+/// </summary>
         });
         return result;
     }

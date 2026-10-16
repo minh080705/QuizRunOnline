@@ -75,26 +75,25 @@ public class PlayerCollisionHandler : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
-        // 1. Dừng player chạy
+        // Dừng player chạy
         if (stats != null) {
             stats.Dead();
         }
 
-
-        // 2. Chuyển animation sang Hitwall / Die
+        // Chuyển animation sang Hitwall / Die
         playerAnimation.TriggerDeath();
         if (netState != null) netState.NotifyDead();
 
-        // 3. Rung màn hình (prefab không giữ được tham chiếu camera trong scene nên tìm lúc runtime)
+        // Rung màn hình (prefab không giữ được tham chiếu camera trong scene nên tìm lúc runtime)
         if (cameraShake == null)
             cameraShake = FindObjectOfType<CameraShake>();
         if (cameraShake != null)
             cameraShake.Shake(shakeDuration, shakeMagnitude);
 
-        // 3b. Hiệu ứng hạt tại điểm va chạm (chỉ máy này; đã chắc chắn là nhân vật của mình nhờ IsAuthority + isDead ở trên)
+        // Hiệu ứng hạt tại điểm va chạm (chỉ máy này; đã chắc chắn là nhân vật của mình nhờ IsAuthority + isDead ở trên)
         SpawnEffect.PlayAt(hitEffect, hitPoint);
 
-        // 4. Trừ 1 mạng: còn mạng thì hồi sinh sau vài giây, hết mạng thì bị loại và chuyển sang quan sát
+        // Trừ 1 mạng: còn mạng thì hồi sinh sau vài giây, hết mạng thì bị loại và chuyển sang quan sát
         if (lives != null)
             lives.OnPlayerDied();
     }

@@ -7,7 +7,6 @@ public class RacePlayersRegistry : MonoBehaviour
     public static RacePlayersRegistry Instance { get; private set; }
     private List<PlayerStats> players = new List<PlayerStats>();
 
-
     void Awake()
     {
         if (Instance == null)

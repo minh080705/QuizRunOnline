@@ -51,7 +51,6 @@ public class PlayerInput : MonoBehaviour
 
     private void HandleSwipeInput()
     {
-        // Có chạm thật (mobile) thì dùng Input.touches
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -60,8 +59,7 @@ public class PlayerInput : MonoBehaviour
         }
 
 #if UNITY_EDITOR
-        // Trong Editor / khi test bằng chuột (Device Simulator dùng mouse để giả lập touch,
-        // nhưng để chắc ăn khi build test tay trên PC không có touch, vẫn hỗ trợ chuột)
+        // Chuột: để test trong Editor và trên PC không có màn hình cảm ứng.
         if (Input.GetMouseButtonDown(0))
             ProcessSwipePhase(TouchPhase.Began, Input.mousePosition);
         else if (Input.GetMouseButtonUp(0))
@@ -82,8 +80,7 @@ public class PlayerInput : MonoBehaviour
 
             case TouchPhase.Moved:
             case TouchPhase.Ended:
-                // Nhận cú vuốt NGAY khi ngón tay đã đi đủ xa (Moved), không chờ nhấc tay (Ended). Trước đây chỉ xử lý
-                // lúc Ended nên nhân vật phản ứng trễ đúng bằng thời gian vuốt (cỡ 0,1 đến 0,3 giây).
+                // Nhận cú vuốt ngay khi ngón tay đi đủ xa (Moved), không chờ nhấc tay, để nhân vật phản ứng tức thì.
                 if (isTracking) TrySwipe(position);
                 if (phase == TouchPhase.Ended) isTracking = false;
                 break;

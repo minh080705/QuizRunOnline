@@ -1,15 +1,7 @@
-﻿// QuestionTrigger.cs
-// Gắn script này lên MỖI chướng ngại vật chứa câu hỏi.
-// Script chỉ chịu trách nhiệm:
-// - Phát hiện va chạm với Player
-// - Nhớ trạng thái riêng: đã được trả lời/kích hoạt hay chưa
-// - Gọi sang QuestionManager (singleton) để hiển thị câu hỏi
-//
-// Không chứa UI, không chứa JSON -> nhẹ, dễ nhân bản ra nhiều object.
-
-using Fusion;
+﻿using Fusion;
 using UnityEngine;
 
+/// <summary>Gắn lên mỗi chướng ngại vật chứa câu hỏi: phát hiện va chạm với nhân vật của máy này và nhờ QuestionManager hiển thị câu hỏi.</summary>
 public class QuestionTrigger : MonoBehaviour
 {
     [Tooltip("Loại câu hỏi prefab này hỏi: Math = toán, English = tiếng Anh, Any = trộn cả hai.")]

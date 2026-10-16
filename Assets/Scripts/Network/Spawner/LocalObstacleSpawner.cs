@@ -122,7 +122,7 @@ public class LocalObstacleSpawner : MonoBehaviour
         }
     }
 
-    // Độ cao gốc lấy từ prefab (như bản cũ), cộng thêm yOffset của mẫu (coin trên không).
+    // Độ cao gốc lấy từ prefab, cộng thêm yOffset của mẫu (coin trên không).
     private static void Spawn(GameObject prefab, float x, float z, float yOffset, List<GameObject> objects)
     {
         if (prefab == null) return;

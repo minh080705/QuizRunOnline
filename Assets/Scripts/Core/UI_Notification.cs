@@ -5,17 +5,8 @@ using TMPro;
 using Fusion;
 
 /// <summary>
-/// Quản lý thông báo dạng hàng đợi (network + local), hiển thị tuần tự.
-///
-/// SỬA QUAN TRỌNG: bỏ hoàn toàn notificationPanel.SetActive(true/false).
-/// Trước đây Awake() gọi SetActive(false) lên panel - nếu panel này VÔ TÌNH
-/// là cha (hoặc chính) của các component khác dùng pattern "subscribe event
-/// trong Start()/OnEnable()" (ví dụ AddPointsNotification), việc tắt panel
-/// sẽ chặn luôn Start()/OnEnable() của các component con đó, khiến chúng
-/// không bao giờ nhận được event dù logic hoàn toàn đúng.
-///
-/// Panel giờ LUÔN active, chỉ ẩn/hiện qua CanvasGroup.alpha (coroutine Fade
-/// sẵn có đã tự lo việc này) - an toàn để dùng chung parent với các UI khác.
+/// Thông báo dạng hàng đợi (mạng và cục bộ), hiển thị tuần tự. Panel luôn active và chỉ ẩn/hiện bằng CanvasGroup.alpha
+/// để các component con dùng chung parent vẫn nhận được Start/OnEnable.
 /// </summary>
 public class UI_Notification : NetworkBehaviour
 {
@@ -37,8 +28,6 @@ public class UI_Notification : NetworkBehaviour
     {
         if (Instance == null) Instance = this;
 
-        // Không SetActive(false) panel nữa - chỉ ẩn qua alpha.
-        // Panel luôn active, an toàn cho các component con khác dùng chung.
         canvasGroup.alpha = 0f;
     }
 
@@ -47,14 +36,12 @@ public class UI_Notification : NetworkBehaviour
         if (Instance == this) Instance = null;
     }
 
-    // ==================== LOCAL (chỉ máy này thấy) ====================
     // Dùng cho: nhận vật phẩm tăng tốc, nhận khiên, nhận x2 vàng, đã sử dụng vật phẩm
     public void ShowLocalMessage(string message)
     {
         Enqueue(message);
     }
 
-    // ==================== NETWORKED (mọi máy đều thấy) ====================
     // Dùng cho: player rời đường đua, player về đích, player bất tỉnh
     public void ShowNetworkMessage(string message)
     {
@@ -67,7 +54,6 @@ public class UI_Notification : NetworkBehaviour
         Enqueue(message);
     }
 
-    // ==================== Hiển thị tuần tự ====================
     private void Enqueue(string message)
     {
         messageQueue.Enqueue(message);

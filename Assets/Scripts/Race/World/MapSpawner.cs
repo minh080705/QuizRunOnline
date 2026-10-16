@@ -2,14 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Dựng map theo từng KHỐI dài blockLength (500 m) quanh "tâm thế giới" (WorldFocus): nhân vật local, hoặc người đang
-/// được camera theo dõi khi mình hết mạng / đã về đích.
-///
-/// Khối k phủ [originZ + blockLength*k, originZ + blockLength*(k+1)]. Quanh Z hiện tại của tâm, giữ khối chứa điểm cách
-/// lookAhead (250 m) phía trước và khối liền trước đó: khối kế tiếp xuất hiện khi còn 250 m, khối cũ bị gỡ khi qua nửa khối
-/// kế (đúng hành vi cũ khi chạy tới) nhưng chạy được cả hai chiều và theo bất kỳ tâm nào.
-/// Khối bị gỡ không bị Destroy mà tắt đi và giữ lại trong pool theo từng prefab, khối mới cùng loại dùng lại: tránh
-/// Instantiate/Destroy cả nghìn object mỗi 500 m (gây giật trên điện thoại) và giúp chuyển tâm nhanh.
+/// Dựng map theo từng khối dài blockLength quanh "tâm thế giới" (WorldFocus). Giữ khối chứa điểm cách lookAhead mét phía trước
+/// và khối liền trước. Khối bị gỡ được tắt và giữ lại trong pool theo từng prefab, tránh Instantiate/Destroy hàng nghìn object mỗi khối.
 /// </summary>
 public class MapSpawner : MonoBehaviour
 {
@@ -58,7 +52,6 @@ public class MapSpawner : MonoBehaviour
         focus = target;
         if (focus == null) return;
 
-        // Gốc khối = Z vạch xuất phát (khớp Z spawn của người chơi); không có cấu hình thì dùng Z tâm lần đầu như bản cũ.
         if (!originKnown)
         {
             originZ = RaceTrackConfig.Instance != null ? RaceTrackConfig.Instance.StartZ : focus.position.z;
@@ -81,7 +74,6 @@ public class MapSpawner : MonoBehaviour
         int high = Mathf.Max(key, 0);
         int low = Mathf.Max(key - 1, 0);
 
-        // 1. Gỡ khối nằm ngoài tập cần có (tắt và đưa về pool).
         removeBuffer.Clear();
         foreach (int block in blocks.Keys)
         {
@@ -90,7 +82,6 @@ public class MapSpawner : MonoBehaviour
         foreach (int block in removeBuffer)
             ReleaseBlock(block);
 
-        // 2. Dựng khối còn thiếu.
         for (int block = low; block <= high; block++)
         {
             if (!blocks.ContainsKey(block))
@@ -109,7 +100,7 @@ public class MapSpawner : MonoBehaviour
         GameObject prefab = maps[mapIndex];
         if (prefab == null) return;
 
-        // Tâm khối (prefab map có gốc ở giữa, trải dài 500 m theo Z).
+        // Tâm khối: prefab map có gốc ở giữa, trải dài blockLength theo Z.
         Vector3 position = new Vector3(mapOriginX, 0f, originZ + blockLength * (block + 0.5f));
 
         GameObject instance = null;

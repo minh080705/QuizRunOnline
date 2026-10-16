@@ -124,7 +124,6 @@ public class PlayerNetworkState : NetworkBehaviour
         playerAnimation.UpdateMovement(Speed, !IsJumping);
     }
 
-    // ---- Gọi từ phía chủ sở hữu ----
     public void NotifyJump() { if (Object.HasStateAuthority) JumpCount++; }
     public void NotifySlide() { if (Object.HasStateAuthority) SlideCount++; }
     public void NotifyDead() { if (Object.HasStateAuthority) IsDead = true; }

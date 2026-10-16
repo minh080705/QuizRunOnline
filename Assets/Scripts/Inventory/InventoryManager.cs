@@ -30,8 +30,6 @@ public class InventoryManager : NetworkBehaviour
         if (!Object.HasStateAuthority) return;
         if (newItem == null) return;
 
-        
-
         Buff overflowItem = slots[maxSlots - 1];
 
         for (int i = maxSlots - 1; i > 0; i--)
@@ -43,7 +41,6 @@ public class InventoryManager : NetworkBehaviour
 
         string slotsLog = string.Join(", ", System.Array.ConvertAll(slots, s => s != null ? s.name : "null"));
         
-
         if (overflowItem != null)
         {
             OnItemDiscarded?.Invoke(overflowItem);

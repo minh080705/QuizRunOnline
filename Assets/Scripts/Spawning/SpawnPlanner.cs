@@ -19,10 +19,6 @@ public static class SpawnPlanner
 {
     private enum RowPattern { Empty, Single, Double, Staggered, LowWall, Overhead, Mixed }
 
-    // ======================================================================
-    // KHỞI TẠO
-    // ======================================================================
-
     public static PlannerState InitState(SpawnProfile profile, float trackStartZ)
     {
         int all = (1 << profile.LaneCount) - 1;
@@ -42,10 +38,6 @@ public static class SpawnPlanner
             NextId = 0,
         };
     }
-
-    // ======================================================================
-    // LẬP KẾ HOẠCH MỘT HÀNG
-    // ======================================================================
 
     /// <summary>
     /// Sinh hàng vật cản tại st.NextRowZ (+ coin/item trong khoảng trống phía sau nó) vào output rồi tiến st.NextRowZ.
@@ -69,7 +61,6 @@ public static class SpawnPlanner
             0, laneCount - 1);
         bool actionOk = !hasPrev || !st.LastRowAction || timeGap >= profile.ActionLockTime;
 
-        // ---- Chọn mẫu ----
         RowPattern pattern;
         bool force = false;
         if (st.ChainRemaining > 0)
@@ -83,7 +74,6 @@ public static class SpawnPlanner
             pattern = PickPattern(profile, p, actionOk);
         }
 
-        // ---- Dựng hàng ----
         int freeMask = all;
         int passableMask = all;
         float rowLength = 0f;
@@ -127,7 +117,6 @@ public static class SpawnPlanner
         if (pattern == RowPattern.Staggered)
             st.ChainRemaining = Random.Range(2, 4);
 
-        // ---- Coin / item trong khoảng trống giữa hàng trước và hàng này ----
         if (hasPrev)
         {
             float zStart = st.LastRowZ + st.LastRowLength * 0.5f + profile.coinPadding;
@@ -148,7 +137,6 @@ public static class SpawnPlanner
             AddEntry(output, ref st, SpawnKind.Coin, 0, CoinPattern.JumpArc, count, profile.laneX[lane], z, arcLength);
         }
 
-        // ---- Khoảng cách tới hàng kế ----
         float gap = Mathf.Max(profile.minRowGap, profile.rowGapSeconds.Evaluate(p) * v);
         if (action)
             gap = Mathf.Max(gap, profile.ActionLockTime * v); // hồi lại sau khi nhảy/trượt
@@ -164,10 +152,6 @@ public static class SpawnPlanner
         st.LastRowAction = action;
         st.NextRowZ = z + gap;
     }
-
-    // ======================================================================
-    // CHỌN MẪU
-    // ======================================================================
 
     private static RowPattern PickPattern(SpawnProfile profile, float p, bool actionOk)
     {
@@ -199,10 +183,6 @@ public static class SpawnPlanner
         if ((roll -= wOver) < 0f) return RowPattern.Overhead;
         return RowPattern.Mixed;
     }
-
-    // ======================================================================
-    // DỰNG HÀNG VẬT CẢN
-    // ======================================================================
 
     /// <summary>Chặn blockCount làn bằng vật cản BlockLane, chọn tổ hợp mà từ hàng trước vẫn tới được.</summary>
     private static bool TryBlockRow(SpawnProfile profile, ref PlannerState st, int laneCount, int all, int blockCount,
@@ -321,10 +301,6 @@ public static class SpawnPlanner
         return false;
     }
 
-    // ======================================================================
-    // COIN VÀ ITEM TRONG KHOẢNG TRỐNG
-    // ======================================================================
-
     private static void FillGap(SpawnProfile profile, ref PlannerState st, float p, float v, int laneCount, int all,
         int freeMask, float rowZ, float zStart, float zEnd, List<SpawnEntry> output)
     {
@@ -333,7 +309,6 @@ public static class SpawnPlanner
 
         float midZ = (zStart + zEnd) * 0.5f;
 
-        // ---- Item (tối đa một cái mỗi khoảng trống), đặt giữa khoảng trống ở một làn trống ----
         int itemLane = -1;
         if (rowZ >= st.NextQuestionZ && profile.questionPrefabs != null && profile.questionPrefabs.Length > 0)
         {
@@ -350,7 +325,6 @@ public static class SpawnPlanner
             st.NextBuffZ = rowZ + profile.buffEveryMeters * Random.Range(0.8f, 1.2f);
         }
 
-        // ---- Coin ----
         if (profile.coinPrefab == null || Random.value >= profile.coinChance.Evaluate(p)) return;
 
         int coinMask = itemLane >= 0 ? freeMask & ~Bit(itemLane) : freeMask; // không đặt coin chồng lên item
@@ -400,10 +374,6 @@ public static class SpawnPlanner
         float firstZ = zStart + (usable - length) * 0.5f;
         AddEntry(output, ref st, SpawnKind.Coin, variant, pattern, count, profile.laneX[lane], firstZ, length);
     }
-
-    // ======================================================================
-    // TIỆN ÍCH
-    // ======================================================================
 
     private static void AddEntry(List<SpawnEntry> output, ref PlannerState st, SpawnKind kind, int variant,
         CoinPattern pattern, int count, float x, float z, float length)
@@ -469,10 +439,6 @@ public static class SpawnPlanner
         }
         return true;
     }
-
-    // ======================================================================
-    // KIỂM THỬ BẤT BIẾN (chạy trong Editor, không cần chơi game)
-    // ======================================================================
 
     private struct SimObstacle { public int lane; public float zMin; public float zMax; }
 

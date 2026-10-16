@@ -5,9 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class RoomManager : NetworkBehaviour
 {
-
     private Dictionary<PlayerRef, PlayerRoomData> _players = new();
-
 
     void Update()
     {

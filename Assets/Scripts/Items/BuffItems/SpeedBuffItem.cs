@@ -27,28 +27,22 @@ public class SpeedBuffItem : MonoBehaviour
 
         if (!other.CompareTag("Player"))
         {
-            
             return;
         }
 
         PlayerStats stats = other.GetComponent<PlayerStats>();
         if (stats == null)
         {
-            
             return;
         }
 
-       
         if (!stats.Object.HasStateAuthority) return;
 
         InventoryManager targetInventory = other.GetComponent<InventoryManager>();
         if (targetInventory == null)
         {
-            
             return;
         }
-
-       
 
         targetInventory.AddItem(speedBuff);
         rewardFlyDemo?.TestReward();

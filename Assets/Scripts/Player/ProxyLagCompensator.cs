@@ -72,7 +72,6 @@ public class ProxyLagCompensator : MonoBehaviour
             myRttSeconds = (float)runner.GetPlayerRtt(runner.LocalPlayer);
         }
 
-        // Vị trí gốc (chưa bù) của frame này.
         Vector3 pos = transform.position;
         Vector3 basePos = hasApplied && (pos - lastAppliedPos).sqrMagnitude < 1e-10f ? lastBasePos : pos;
 

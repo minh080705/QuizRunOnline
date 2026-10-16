@@ -2,6 +2,7 @@
 using Fusion;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class RoomListUI : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class RoomListUI : MonoBehaviour
     [SerializeField] private TMP_InputField maxPlayersInput;
     [SerializeField] private GameObject roomPanel;
 
+    [Tooltip("Nút tạo phòng (tùy chọn). Bị khóa cho tới khi sảnh kết nối xong.")]
+    [SerializeField] private Button createRoomButton;
+
     [Tooltip("Dòng \"Chưa có phòng nào...\" (tùy chọn). Chỉ hiện khi đã nhận danh sách từ server mà không có phòng mở.")]
     [SerializeField] private GameObject emptyText;
     private List<RoomListItem> _spawnedItems = new List<RoomListItem>();
@@ -21,6 +25,22 @@ public class RoomListUI : MonoBehaviour
     {
         Instance = this;
         if (emptyText != null) emptyText.SetActive(false); // chưa nhận danh sách thì chưa kết luận là "không có phòng"
+    }
+
+    void OnEnable()
+    {
+        LobbyManager.OnLobbyReadyChanged += SetCreateRoomInteractable;
+        SetCreateRoomInteractable(LobbyManager.Instance != null && LobbyManager.Instance.IsLobbyReady);
+    }
+
+    void OnDisable()
+    {
+        LobbyManager.OnLobbyReadyChanged -= SetCreateRoomInteractable;
+    }
+
+    private void SetCreateRoomInteractable(bool ready)
+    {
+        if (createRoomButton != null) createRoomButton.interactable = ready;
     }
 
     public void RefreshList(List<SessionInfo> sessions)
@@ -60,6 +80,8 @@ public class RoomListUI : MonoBehaviour
     }
     public async void OnClickCreateRoom()
     {
+        if (LobbyManager.Instance == null || !LobbyManager.Instance.IsLobbyReady) return;
+
         string roomName = string.IsNullOrEmpty(roomNameInput.text)
             ? "Room_" + Random.Range(1000, 9999)
             : roomNameInput.text;

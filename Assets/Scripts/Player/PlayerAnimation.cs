@@ -7,7 +7,6 @@ public class PlayerAnimation : MonoBehaviour
 
     [SerializeField] private PlayerStats playerStats;
 
-    // ---- Tên parameter (dùng hash để tối ưu, tránh gõ sai chuỗi) ----
     private static readonly int SpeedParam = Animator.StringToHash("Speed");
     private static readonly int IsGroundedParam = Animator.StringToHash("IsGrounded");
     private static readonly int JumpParam = Animator.StringToHash("Jump");
@@ -43,12 +42,8 @@ public class PlayerAnimation : MonoBehaviour
 
     private void Update()
     {
-        // Nếu đã chết thì không cập nhật movement nữa
         if (isDead || DrivenRemotely) return;
 
-        // Tự động đọc từ PlayerLaneSwitcher nếu có gán reference.
-        // ĐIỀU CHỈNH: đổi PlayerLaneSwitcher.CurrentSpeed / PlayerLaneSwitcher.IsGrounded
-        // cho đúng tên property/field thật sự có trong PlayerLaneSwitcher.cs của bạn.
         if (playerStats != null)
         {
             UpdateMovement(playerStats.moveSpeed, playerStats.isGrounded);

@@ -1,12 +1,7 @@
-﻿// QuestionManager.cs
-// Singleton duy nhất quản lý:
-// - Load dữ liệu câu hỏi từ JSON (chỉ load 1 lần), chia theo loại (math / english) để mỗi prefab hỏi đúng loại của nó
-// - Hiển thị / ẩn UI câu hỏi (dùng chung cho mọi chướng ngại vật)
-// - Kiểm tra đáp án và gọi hiệu ứng / buff tương ứng
-// - Tính điểm quiz qua PlayerScoreManager
-//
-// Mỗi chướng ngại vật chỉ cần gắn QuestionTrigger.cs (nhẹ, không chứa UI/JSON)
-// và gọi QuestionManager.Instance.ShowQuestion(trigger, player) khi va chạm.
+﻿/// <summary>
+/// Quản lý câu hỏi: nạp JSON theo loại, hiển thị UI, chấm đáp án rồi áp buff và tính điểm.
+/// Chướng ngại vật chỉ cần QuestionTrigger gọi ShowQuestion khi va chạm.
+/// </summary>
 
 using System.Collections;
 using System.Collections.Generic;
@@ -18,9 +13,6 @@ public class QuestionManager : MonoBehaviour
 {
     public static QuestionManager Instance { get; private set; }
 
-    // =========================================================
-    // UI
-    // =========================================================
     [SerializeField] private GameObject screenQuestion;
     [Header("UI")]
     [SerializeField] private GameObject background;
@@ -32,9 +24,6 @@ public class QuestionManager : MonoBehaviour
     [Header("Buff/Debuff References")]
     [SerializeField] private SpeedBuff speedBuffAsset;
     [SerializeField] private SlowDebuff slowDebuffAsset;
-    // =========================================================
-    // QUESTION DATA
-    // =========================================================
     [Header("Question")]
     [SerializeField] private TextAsset questionJson;
 
@@ -50,13 +39,9 @@ public class QuestionManager : MonoBehaviour
     // Mỗi loại câu hỏi một "túi" xáo trộn: hỏi hết túi mới lặp lại câu cũ (xem QuestionBag).
     private readonly Dictionary<QuestionCategory, QuestionBag> bags = new Dictionary<QuestionCategory, QuestionBag>();
 
-    // =========================================================
-    // INTERNAL STATE
-    // =========================================================
     private bool isAnswered = false;
     private int currentCorrectAnswer;
 
-    // Lưu lại để dựng AnswerResult khi CheckAnswer() được gọi
     private int currentDifficulty;
     private float questionStartTime;
 
@@ -65,10 +50,6 @@ public class QuestionManager : MonoBehaviour
 
     private GameObject player;
     private QuestionTrigger currentTrigger; // Chướng ngại vật đang hỏi (để báo kết quả trở lại)
-
-    // =========================================================
-    // UNITY
-    // =========================================================
 
     private void Awake()
     {
@@ -86,7 +67,6 @@ public class QuestionManager : MonoBehaviour
 
         if (questionJson == null)
         {
-
             return;
         }
 
@@ -167,23 +147,16 @@ public class QuestionManager : MonoBehaviour
 
         if (remaining <= 0f)
         {
-            Debug.Log("Hết giờ trả lời!");
             CheckAnswer(-1); // -1 không khớp đáp án nào -> sai
         }
     }
-
-    // =========================================================
-    // ĐƯỢC GỌI TỪ QuestionTrigger KHI PLAYER VA CHẠM
-    // =========================================================
 
     // Trả về true nếu câu hỏi được chấp nhận hiển thị,
     // false nếu đang có câu hỏi khác chưa được trả lời (trigger sẽ không bị khóa).
     public bool ShowQuestion(QuestionTrigger trigger, GameObject playerObj)
     {
-        // Đang có câu hỏi khác chưa trả lời -> từ chối, không cho hỏi chồng lên nhau
         if (isQuestionAvailable)
         {
-            Debug.Log("Đang có câu hỏi khác chưa trả lời, bỏ qua trigger mới.");
             return false;
         }
 
@@ -200,10 +173,8 @@ public class QuestionManager : MonoBehaviour
         screenQuestion.SetActive(true);
         isQuestionVisible = true;
 
-        // Loại câu hỏi do prefab chạm vào quyết định (Math / English / Any).
         QuestionCategory category = trigger != null ? trigger.Category : QuestionCategory.Any;
         QuestionData question = questions[PickQuestionIndex(category)];
-        Debug.Log($"[Question] {category} #{question.id} ({question.category})");
 
         questionText.text = question.question;
 
@@ -220,7 +191,6 @@ public class QuestionManager : MonoBehaviour
 
         currentCorrectAnswer = question.correctAnswer;
 
-        // Lưu thông tin cần thiết để tính điểm khi CheckAnswer() được gọi
         currentDifficulty = question.difficulty;
         questionStartTime = Time.time;
 
@@ -234,10 +204,6 @@ public class QuestionManager : MonoBehaviour
 
         return true;
     }
-
-    // =========================================================
-    // TOGGLE ẨN/HIỆN TẠM THỜI (gọi từ HideAndShowQuestionButton)
-    // =========================================================
 
     public void HideAndShowQuestion()
     {
@@ -262,10 +228,6 @@ public class QuestionManager : MonoBehaviour
         HideAndShowQuestionButton.gameObject.SetActive(isQuestionAvailable);
     }
 
-    // =========================================================
-    // ANSWER
-    // =========================================================
-
     private void CheckAnswer(int selectedAnswer)
     {
         if (isAnswered)
@@ -275,7 +237,6 @@ public class QuestionManager : MonoBehaviour
 
         bool isCorrect = selectedAnswer == currentCorrectAnswer;
 
-        // ---- Đóng gói kết quả trả lời + gửi cho PlayerScoreManager ----
         // Gọi 1 LẦN DUY NHẤT cho cả 2 trường hợp đúng/sai: AddQuizScore() tự lo
         // việc cộng điểm (nếu đúng) và reset streak (nếu sai), không cần if ở đây.
         float timeTaken = Mathf.Min(Time.time - questionStartTime, answerTimeLimit);
@@ -290,8 +251,6 @@ public class QuestionManager : MonoBehaviour
 
         if (isCorrect)
         {
-            Debug.Log("Đúng!");
-
             if (SpawnEffect.Instance != null)
                 SpawnEffect.Instance.PlayCorrectEffect(player);
 
@@ -303,8 +262,6 @@ public class QuestionManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Sai!!");
-
             if (SpawnEffect.Instance != null)
                 SpawnEffect.Instance.PlayWrongEffect(player);
 
@@ -323,10 +280,6 @@ public class QuestionManager : MonoBehaviour
         currentTrigger = null;
     }
 
-    // =========================================================
-    // UI
-    // =========================================================
-
     private void HideQuestionUI()
     {
         if (screenQuestion != null)
@@ -344,10 +297,6 @@ public class QuestionManager : MonoBehaviour
         if (answerButton2 != null)
             answerButton2.gameObject.SetActive(false);
     }
-
-    // =========================================================
-    // JSON DATA CLASS
-    // =========================================================
 
     /// <summary>
     /// Túi câu hỏi xáo trộn: lấy lần lượt hết túi rồi mới trộn lại, nên một câu không lặp trước khi hỏi hết các câu còn lại.

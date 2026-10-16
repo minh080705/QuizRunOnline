@@ -104,10 +104,6 @@ public class PlayerLives : NetworkBehaviour
         }
     }
 
-    // =========================================================
-    // HỒI SINH
-    // =========================================================
-
     private IEnumerator RespawnRoutine()
     {
         RespawnRemaining = respawnDelay;
@@ -154,10 +150,6 @@ public class PlayerLives : NetworkBehaviour
         else
             Debug.LogWarning("[PlayerLives] Chưa gán Respawn Shield: nhân vật sẽ hồi sinh mà không có khiên.");
     }
-
-    // =========================================================
-    // BỊ LOẠI
-    // =========================================================
 
     private IEnumerator EliminationRoutine()
     {

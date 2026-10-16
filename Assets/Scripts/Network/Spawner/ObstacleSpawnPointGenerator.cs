@@ -76,8 +76,7 @@ public class ObstacleSpawnPointGenerator : NetworkBehaviour
             plan.Clear();
             SpawnPlanner.PlanNextRow(profile, ref next, speed, trackStartZ, trackLength, plan);
 
-            // Không đủ chỗ cho cả hàng: dừng và thử lại tick sau. KHÔNG tăng NextRowZ, nếu không sẽ để lại
-            // một đoạn đường trống phía trước (lỗi của bản cũ khi hết slot).
+            // Không đủ chỗ cho cả hàng: dừng và thử lại tick sau. Không tăng NextRowZ để khỏi để lại đoạn đường trống.
             if (CountFreeSlots() < plan.Count) break;
 
             WriteEntries(plan);
@@ -118,10 +117,6 @@ public class ObstacleSpawnPointGenerator : NetworkBehaviour
             slot++;
         }
     }
-
-    // ----------------------------------------------------------------------
-    // KIỂM THỬ: chuột phải component trong Inspector > "Simulate spawn"
-    // ----------------------------------------------------------------------
 
     [ContextMenu("Simulate spawn (kiểm tra bất biến, xem Console)")]
     private void SimulateInEditor()
