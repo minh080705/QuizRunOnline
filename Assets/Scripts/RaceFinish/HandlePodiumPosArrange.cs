@@ -95,7 +95,6 @@ public class HandlePodiumPosArrange : MonoBehaviour
         yield return new WaitForSeconds(scoreSyncDelay);
 
         int rank = GetMyRankByScore();
-        Debug.Log($"[Podium] my rank index = {rank}");
 
         if (rank < 0 || rank >= podium.Length || podium[rank] == null)
         {
@@ -116,7 +115,6 @@ public class HandlePodiumPosArrange : MonoBehaviour
 
         MoveToPodiumPosition(no, podium[rank], rank);
 
-        // Local player đã lên bục xong -> báo cho camera chuyển sang cinematic
         yield return new WaitForSeconds(1f);
         OnLocalPlayerReachedPodium?.Invoke(championPos, runnerupPos, thirdplacePos);
 
@@ -200,15 +198,15 @@ public class HandlePodiumPosArrange : MonoBehaviour
             return;
         }
 
-        // 1. Tắt input điều khiển (vuốt/phím): người chơi không nhảy, trượt hay đổi làn được nữa khi đứng trên bục.
+        // Tắt input điều khiển (vuốt/phím): người chơi không nhảy, trượt hay đổi làn được nữa khi đứng trên bục.
         PlayerInput input = no.GetComponentInChildren<PlayerInput>(true);
         if (input != null)
             input.enabled = false;
 
-        // 2. Dịch chuyển lên bục và xoay thêm podiumYawOffset (180 độ) để mặt hướng về camera thay vì quay lưng.
+        // Dịch chuyển lên bục và xoay thêm podiumYawOffset (180 độ) để mặt hướng về camera thay vì quay lưng.
         nt.Teleport(targetPos.position, targetPos.rotation * Quaternion.Euler(0f, podiumYawOffset, 0f));
 
-        // 3. Animation: hạng 1 chạy Happy, hạng 2 trở xuống chạy idle. Qua PlayerNetworkState để máy khác cũng thấy.
+        // Animation: hạng 1 chạy Happy, hạng 2 trở xuống chạy idle. Qua PlayerNetworkState để máy khác cũng thấy.
         bool isChampion = rank == 0;
 
         PlayerAnimation playerAnim = no.GetComponentInChildren<PlayerAnimation>(true);
@@ -221,7 +219,5 @@ public class HandlePodiumPosArrange : MonoBehaviour
         PlayerNetworkState netState = no.GetComponentInChildren<PlayerNetworkState>(true);
         if (netState != null)
             netState.NotifyCelebrate(isChampion);
-
-        Debug.Log($"[Podium] moved {no.name} to {targetPos.position}, now at {no.transform.position}, hạng {rank + 1}");
     }
 }

@@ -36,7 +36,6 @@ public class AddPointsNotification : MonoBehaviour
 
     private void Start()
     {
-
         if (PlayerScoreManager.Instance != null)
         {
             PlayerScoreManager.Instance.OnScoreUpdated += HandleScoreUpdated;
@@ -48,7 +47,6 @@ public class AddPointsNotification : MonoBehaviour
 
     private void OnDisable()
     {
-       
         if (PlayerScoreManager.Instance != null)
             PlayerScoreManager.Instance.OnScoreUpdated -= HandleScoreUpdated;
     }
@@ -65,7 +63,6 @@ public class AddPointsNotification : MonoBehaviour
 
     public void Show(int amount)
     {
-
         if (pointsText != null)
             pointsText.text = $"+{amount}";
 
@@ -82,8 +79,6 @@ public class AddPointsNotification : MonoBehaviour
         Vector2 endPos = startPos + Vector2.up * moveDistance;
         float t = 0f;
 
-        
-
         while (t < duration)
         {
             t += Time.deltaTime;
@@ -94,8 +89,6 @@ public class AddPointsNotification : MonoBehaviour
 
             yield return null;
         }
-
-       
 
         canvasGroup.alpha = 0f;
         playingRoutine = null;

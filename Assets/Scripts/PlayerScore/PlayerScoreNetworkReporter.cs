@@ -16,9 +16,7 @@ public class PlayerScoreNetworkReporter : MonoBehaviour
 {
     private void Start()
     {
-        // Dùng Start() thay vì OnEnable() - đảm bảo PlayerScoreManager.Awake()
-        // và LeaderboardManager.Spawned() đã chạy xong trước đó (xem lý do
-        // chi tiết đã giải thích ở AddPointsNotification.cs).
+// Start thay vì OnEnable: PlayerScoreManager.Awake() và LeaderboardManager.Spawned() phải chạy xong trước.
         if (PlayerScoreManager.Instance != null)
         {
             // Mọi người bắt đầu trận với 0 điểm, rồi báo 0 điểm đó lên bảng điểm ngay khi có thể -

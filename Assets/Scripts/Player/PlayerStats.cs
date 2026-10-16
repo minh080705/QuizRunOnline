@@ -22,7 +22,6 @@
         // Tốc độ "tự nhiên" do acceleration sinh ra, không bị buff đụng vào
         private float naturalMoveSpeed;
 
-        // Hệ số nhân tổng hợp từ tất cả buff/debuff đang active
         public float buffMultiplier = 1f;
         private readonly Dictionary<object, float> activeMultipliers = new();
 
@@ -52,14 +51,8 @@
             initialSideSpeed = sideSpeed;
         }
 
-        private void Start()
-        {
-        }
-
         public override void Spawned()
         {
-
-
             RacePlayersRegistry.Instance.Register(this);
             if (Object.HasInputAuthority)
             {
@@ -84,7 +77,6 @@
             // canMove/isDead thay đổi sau đó.
             if (!canMove || isDead || hasFinishedRace || isFrozenByQuestion) return;
 
-            // Tự tăng tốc theo thời gian, không bị buff ghi đè trực tiếp
             if (naturalMoveSpeed < maxSpeed)
             {
                 naturalMoveSpeed = Mathf.Min(naturalMoveSpeed + accelerationRate * Runner.DeltaTime, maxSpeed);

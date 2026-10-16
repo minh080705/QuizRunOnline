@@ -16,7 +16,7 @@ public abstract class Buff : ScriptableObject
     // Gọi mỗi khi số stack thay đổi (tăng lúc nhặt thêm, giảm lúc hết hạn)
     public abstract void OnStackChanged(PlayerStats player, int currentStack, BuffContext context);
 
-    // Hàm tiện ích — item/UI vẫn gọi y hệt như code cũ, không cần đổi gì ở nơi gọi
+    // Tiện ích cho item/UI: áp buff lên nhân vật.
     public void ApplyBuff(PlayerStats targetPlayer)
     {
         if (!targetPlayer.Object.HasStateAuthority) return;
@@ -26,17 +26,3 @@ public abstract class Buff : ScriptableObject
     }
 }
 
-
-//using UnityEngine;
-
-//public abstract class Buff : MonoBehaviour
-//{
-//    [Header("Thông tin Buff")]
-//    public float buffDuration = 5f;
-//    public Sprite icon;
-
-//    [Header("Effect")]
-//    [SerializeField] public GameObject buffEffectPrefab;
-
-//    public abstract void ApplyBuff(PlayerStats targetPlayer); 
-//}

@@ -108,7 +108,5 @@ public class FinishLineSpawner : NetworkBehaviour
                     Debug.LogError("[FinishLineSpawner] Prefab vạch đích không có component FinishLine.");
             });
         FinishSpawned = true;
-
-        Debug.Log($"[FinishLineSpawner] Đã spawn vạch đích tại Z={finishZ}.");
     }
 }

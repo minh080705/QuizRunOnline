@@ -78,8 +78,6 @@ public class RaceSummaryUI : MonoBehaviour
         }
     }
 
-    // ---------------- Hiện nút "Chạm để tiếp tục" ----------------
-
     private void HandleArrangeCompleted()
     {
         StartContinueTimer(continueDelay);
@@ -113,8 +111,6 @@ public class RaceSummaryUI : MonoBehaviour
 
         ShowSummary();
     }
-
-    // ---------------- Bảng tổng kết ----------------
 
     private void ShowSummary()
     {
@@ -169,8 +165,6 @@ public class RaceSummaryUI : MonoBehaviour
         }
         panelGroup.alpha = 1f;
     }
-
-    // ---------------- Về phòng ----------------
 
     private async void OnBackClicked()
     {

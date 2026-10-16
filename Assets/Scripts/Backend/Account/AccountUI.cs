@@ -49,7 +49,6 @@ public class AccountUI : MonoBehaviour
         StayOnAccountScreen = false;
 
         // Đã đăng nhập và hồ sơ còn trong bộ nhớ (dịch vụ sống qua các scene): hiện luôn, không đọc lại Firestore.
-        // Trước đây luôn tải lại ~1 giây trong lúc panel đăng nhập đang hiện nên bị nháy.
         UserProfileService profiles = UserProfileService.Instance;
         if (AuthService.Instance.IsSignedIn && profiles.Current != null)
         {

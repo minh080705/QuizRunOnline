@@ -83,7 +83,6 @@ public class RaceSpectatorManager : MonoBehaviour
         RebuildActiveTargets();
         currentIndex = activeTargets.Count > 0 ? 0 : -1;
 
-
         OnSpectatorModeActivated?.Invoke();
         NotifyTargetChanged();
     }
@@ -134,9 +133,7 @@ public class RaceSpectatorManager : MonoBehaviour
 
             if (!finishedPlayers.Contains(p.Object.StateAuthority))
                 activeTargets.Add(p);
-            Debug.Log($"{p.name}: Input={p.Object.InputAuthority}, State={p.Object.StateAuthority}");
         }
-
     }
 
     private void NotifyTargetChanged()

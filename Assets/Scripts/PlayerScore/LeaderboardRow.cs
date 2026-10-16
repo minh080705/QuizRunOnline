@@ -12,7 +12,6 @@ public class LeaderboardRow : MonoBehaviour
 
     public void SetData(int rank, string displayName, int score)
     {
-       
         if (nameText != null) nameText.text = displayName;
         if (scoreText != null) scoreText.text = score.ToString();
     }

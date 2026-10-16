@@ -9,16 +9,8 @@ public class BuffImmediately : MonoBehaviour
     [SerializeField] private PlayerStats player;
     [SerializeField] private PlayerCollisionHandler playerCollisionHandler;
     
-
-
     [Header("Speed Buff Settings")]
     [SerializeField] private SpeedBuff speedBuff;
-    //[SerializeField] public GameObject SpeedBuffEffectPrefab;
-    //[SerializeField] public float SpeedBuffDuration = 5f;
-    //[SerializeField] public float SpeedBuffMultiplier = 3f;
-    //[SerializeField] private Sprite speedBuffIcon;
-
-
 
     [Header("Slow Debuff Settings")]
     [SerializeField] public GameObject SlowDebuffEffectPrefab;
@@ -40,16 +32,12 @@ public class BuffImmediately : MonoBehaviour
     // effect hiện tại đang chạy trên player (dùng chung 1 slot hiển thị)
     private GameObject currentEffect;
 
-
-    // ---- Slow ----
     private int currentSlowStack = 0;
     private float slowBaseSideSpeed = -1f;
     private float slowBaseMoveSpeed = -1f;
 
-    // ---- Shield ----
     private int currentShieldStack = 0;
 
-    // ---- Coin ----
     private int currentCoinStack = 0;
 
     private void Awake()
@@ -57,7 +45,6 @@ public class BuffImmediately : MonoBehaviour
         Instance = this;
     }
 
-    // ---------------- PlayEffect dùng chung ----------------
     public void PlayEffect(GameObject effectPrefab, float duration)
     {
         if (currentEffect != null)
@@ -87,9 +74,6 @@ public class BuffImmediately : MonoBehaviour
         }
     }
 
-
-
-    // ==================== SLOW DEBUFF ====================
     public void SlowDebuff()
     {
         if (currentSlowStack == 0)
@@ -133,7 +117,6 @@ public class BuffImmediately : MonoBehaviour
         player.moveSpeed = slowBaseMoveSpeed * multiplier;
     }
 
-    // ==================== SHIELD BUFF ====================
     // Shield là buff dạng bật/tắt, không nhân hệ số -> "stack" chỉ để biết
     // còn buff nào đang giữ trạng thái bật hay không.
     public void ShieldBuff()
@@ -167,7 +150,6 @@ public class BuffImmediately : MonoBehaviour
         }
     }
 
-    // ==================== COIN BUFF ====================
     public void BuffDoubleCoin()
     {
         if (currentCoinStack >= maxCoinStack)

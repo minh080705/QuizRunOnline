@@ -36,12 +36,6 @@ public class Speedometer : MonoBehaviour
         stats = PlayerContext.Instance.LocalStats;
     }
 
-    void Start()
-    {
-
-    }
-
-
     void LateUpdate()
     {
         if (stats == null) return; // chưa có player thì chưa làm gì
@@ -57,6 +51,5 @@ public class Speedometer : MonoBehaviour
     public void GetPlayerVelocity()
     {
         playerVelocity = stats.moveSpeed * 2;
-
     }
 }

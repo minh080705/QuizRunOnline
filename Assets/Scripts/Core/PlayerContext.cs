@@ -24,8 +24,6 @@ public class PlayerContext : MonoBehaviour
         LocalInventory = player.GetComponent<InventoryManager>();
         int subscriberCount = OnLocalPlayerReady?.GetInvocationList().Length ?? 0;
 
-
-
         OnLocalPlayerReady?.Invoke(player);
     }
     /// <summary>

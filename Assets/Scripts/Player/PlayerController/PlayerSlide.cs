@@ -56,7 +56,6 @@ public class PlayerSlide : MonoBehaviour
         lastSlidePressTime = Time.time;
         if (playerJump != null && playerJump.IsJumping) return; // chặn trượt khi đang nhảy
         StartSlide();
-            
     }
     private void HandleJumpEnded()
     {

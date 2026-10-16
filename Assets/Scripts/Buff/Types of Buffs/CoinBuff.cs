@@ -55,7 +55,6 @@ public class CoinBuff : Buff
     }
 
     // Ô Buff Effect Prefab của lớp Buff không dùng cho Coin Buff (PlayerBuffManager sẽ sinh nó ngay chân nhân vật):
-    // nếu trước đây bạn đã gán model vào đó thì chuyển sang ô Magnet Model.
     private void OnValidate()
     {
         if (buffEffectPrefab == null)

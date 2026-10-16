@@ -89,8 +89,6 @@ public class ShopUI : MonoBehaviour
         Refresh();
     }
 
-    // ---------------- Tab ----------------
-
     private void SwitchTab(Tab newTab)
     {
         tab = newTab;
@@ -106,8 +104,6 @@ public class ShopUI : MonoBehaviour
         skinCharacterIndex = db.Wrap(skinCharacterIndex + direction);
         Refresh();
     }
-
-    // ---------------- Hiển thị ----------------
 
     private void StyleTab(Button tabButton, bool active)
     {
@@ -197,8 +193,6 @@ public class ShopUI : MonoBehaviour
         int coins = profiles.Current != null ? profiles.Current.coins : 0;
         return coins >= price ? CardState.Buy : CardState.NotEnoughCoins;
     }
-
-    // ---------------- Mua ----------------
 
     private void AskToBuy(string itemName, int price, Func<System.Threading.Tasks.Task<UserProfileService.PurchaseResult>> purchase)
     {

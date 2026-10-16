@@ -9,7 +9,6 @@ public class PlayerJump : MonoBehaviour
     [SerializeField] private PlayerCollisionController collisionController;
     [SerializeField] private PlayerSlide playerSlide;
 
-
     [Header("Jump Settings")]
     [SerializeField] private float jumpHeight = 2f;
     [SerializeField] private float jumpDuration = 0.6f;
@@ -70,7 +69,6 @@ public class PlayerJump : MonoBehaviour
         lastJumpPressTime = Time.time;
         if (playerSlide != null && playerSlide.IsSliding) return; // chặn nhảy khi đang trượt
         StartJump();
-        
     }
     private void HandleSlideEnded()
     {
@@ -127,10 +125,4 @@ public class PlayerJump : MonoBehaviour
         collisionController.SetNormal();
         OnJumpEnded?.Invoke();
     }
-
-    
-
-   
-
-    
 }

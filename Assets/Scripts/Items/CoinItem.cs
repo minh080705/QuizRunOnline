@@ -24,11 +24,9 @@ public class CoinItem : MonoBehaviour
 
     private bool collected;
 
-    // ---- Danh sách mọi coin đang hoạt động (để CoinMagnet tìm coin trong phạm vi mà không cần Physics) ----
     private static readonly List<CoinItem> active = new List<CoinItem>();
     public static IReadOnlyList<CoinItem> Active => active;
 
-    // ---- Trạng thái bị nam châm hút ----
     private bool attracted;
     private Transform magnetTarget;
     private PlayerStats magnetStats;
@@ -75,7 +73,6 @@ public class CoinItem : MonoBehaviour
         if (!attracted || collected || magnetTarget == null)
             return;
 
-        // Tốc độ = tốc độ cơ bản + tốc độ chạy hiện tại của nhân vật, rồi tăng dần theo thời gian bay.
         flyTime += Time.deltaTime;
         float speed = magnetBaseSpeed + (magnetStats != null ? magnetStats.moveSpeed : 0f);
         speed *= 1f + flyTime * magnetAcceleration;
@@ -97,18 +94,8 @@ public class CoinItem : MonoBehaviour
         if (!other.CompareTag("Player"))
             return;
 
-        // ---- Kiểm tra Input Authority ----
-        // other có thể là player do CHÍNH máy này điều khiển, hoặc là "ghost"
-        // của player khác được Fusion replicate sang để hiển thị hình ảnh.
-        // Nếu không kiểm tra, cả 2 trường hợp đều khớp tag "Player" và đều
-        // kích hoạt OnTriggerEnter TRÊN MÁY NÀY, dẫn tới cộng điểm nhầm khi
-        // người chơi KHÁC đi ngang qua coin (dù người đó không hề nhặt được
-        // gì trên máy của chính họ).
-        //
-        // HasInputAuthority == true nghĩa là network object này thuộc quyền
-        // điều khiển của chính client đang chạy đoạn code này -> chỉ cộng
-        // điểm trong trường hợp này.
         NetworkObject playerNetworkObject = other.GetComponent<NetworkObject>();
+// other là nhân vật của máy này hoặc bản replicate của người chơi khác: chỉ nhân vật có InputAuthority mới được nhặt coin.
 
         if (playerNetworkObject == null || !playerNetworkObject.HasInputAuthority)
         {
@@ -127,7 +114,6 @@ public class CoinItem : MonoBehaviour
         collected = true;
         CoinCalculator.Instance.UpdateTotalCoin(coinValue);
 
-        // Hiệu ứng đi theo nhân vật vừa nhặt; không là con của coin nên vẫn chạy khi coin bị Destroy.
         SpawnEffect.PlayFollowing(pickupEffect, player, effectOffset);
 
         Destroy(gameObject);

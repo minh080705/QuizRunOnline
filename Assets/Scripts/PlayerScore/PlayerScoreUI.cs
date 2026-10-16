@@ -9,10 +9,8 @@ public class PlayerScoreUI : MonoBehaviour
 
     void OnEnable()
     {
-  
         PlayerScoreManager.Instance.OnScoreUpdated += HandleScoreUpdated;
         UpdateScoreText(PlayerScoreManager.Instance.TotalScore);
-        
     }
 
     void OnDisable()

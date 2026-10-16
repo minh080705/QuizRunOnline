@@ -74,7 +74,6 @@ public class CharacterPickerPopup : MonoBehaviour
         ShopItemCard.ClearGrid(characterGrid);
         ShopItemCard.ClearGrid(skinGrid);
 
-        // Nhân vật đã sở hữu
         for (int c = 0; c < db.CharacterCount; c++)
         {
             if (!profiles.OwnsCharacter(c)) continue;
@@ -92,7 +91,6 @@ public class CharacterPickerPopup : MonoBehaviour
                 });
         }
 
-        // Màu da đã sở hữu của nhân vật đang chọn
         for (int s = 0; s < db.SkinCount(pendingCharacter); s++)
         {
             if (!profiles.OwnsSkin(pendingCharacter, s)) continue;

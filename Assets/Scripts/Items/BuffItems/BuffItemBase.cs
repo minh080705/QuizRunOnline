@@ -8,7 +8,6 @@ public abstract class BuffItemBase : MonoBehaviour
     [Header("Effect")]
     public GameObject buffEffectPrefab;
 
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
@@ -24,12 +23,10 @@ public abstract class BuffItemBase : MonoBehaviour
                 effect.PlayEffect(buffEffectPrefab, buffDuration);
             }
 
-
             // xóa vật phẩm sau khi nhặt
             Destroy(gameObject);
         }
     }
-
 
     // Mỗi loại buff tự viết cách hoạt động
     protected abstract void ApplyBuff(GameObject player);

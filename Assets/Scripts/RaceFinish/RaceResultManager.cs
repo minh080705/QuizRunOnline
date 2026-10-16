@@ -54,10 +54,6 @@ public class RaceResultManager : NetworkBehaviour, IPlayerLeft
         if (Instance == this) Instance = null;
     }
 
-    // =========================================================
-    // API cho code local (gọi trên máy sở hữu player)
-    // =========================================================
-
     /// <summary>Player local vừa chạm vạch đích.</summary>
     public void ReportFinish()
     {
@@ -70,11 +66,8 @@ public class RaceResultManager : NetworkBehaviour, IPlayerLeft
         RPC_ReportEliminated(z);
     }
 
-    // =========================================================
-    // PHÍA TRỌNG TÀI (StateAuthority)
     // Lấy người gửi từ chính RPC (info.Source) thay vì tin tham số client gửi,
     // nên không máy nào khai báo thay người khác được.
-    // =========================================================
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     private void RPC_ReportFinish(RpcInfo info = default)
@@ -190,10 +183,6 @@ public class RaceResultManager : NetworkBehaviour, IPlayerLeft
         EvaluateRace(player);
     }
 
-    // =========================================================
-    // THÔNG BÁO TỚI MỌI MÁY
-    // =========================================================
-
     /// <summary>
     /// Broadcast tới TẤT CẢ client: máy đang spectator cũng cần biết ai vừa
     /// về đích để loại họ khỏi danh sách theo dõi.
@@ -205,7 +194,6 @@ public class RaceResultManager : NetworkBehaviour, IPlayerLeft
         {
             PlayerScoreManager.Instance?.AddRankBonus(rank);
 
-            // Lấy PlayerFinishHandler của nhân vật local qua PlayerContext
             Transform me = PlayerContext.Instance != null ? PlayerContext.Instance.LocalPlayer : null;
             if (me != null)
             {
@@ -235,7 +223,6 @@ public class RaceResultManager : NetworkBehaviour, IPlayerLeft
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_NotifyRaceFinished()
     {
-        Debug.Log("[RaceResultManager] Toàn bộ người chơi đã về đích hoặc bị loại - đua kết thúc.");
         OnRaceFinish?.Invoke();
     }
 }

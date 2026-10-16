@@ -53,11 +53,8 @@ public class TracksSpawner : MonoBehaviour
 
         for (int i = 0; i < poolSize; i++)
         {
-            // 1. Khởi tạo object từ prefab
             GameObject newTrack = Instantiate(track);
-            // 2. Tắt object đi (để chuẩn bị sẵn trong pool, khi nào cần mới bật)
             newTrack.SetActive(false);
-            // 3. Đưa object vừa tạo vào Stack
             pool.Push(newTrack);
         }
 
@@ -71,7 +68,6 @@ public class TracksSpawner : MonoBehaviour
     {
         if (focus == null || !poolReady) return; // chưa có tâm thì chưa làm gì
 
-        // Nếu tâm đã đi quá 1 đoạn bằng trackLength kể từ lần active track gần nhất
         if (focus.position.z - lastSpawnZ >= trackLength)
         {
             Recycle();
@@ -96,7 +92,6 @@ public class TracksSpawner : MonoBehaviour
         float focusZ = focus.position.z;
         lastSpawnZ = focusZ;
 
-        // 1. Bật 1 track ngay tại vị trí tâm
         GameObject centerTrack = GetFromPool();
         if (centerTrack != null)
         {
@@ -104,7 +99,6 @@ public class TracksSpawner : MonoBehaviour
             activeTracks.Add(centerTrack);
         }
 
-        // 2. Bật các track phía sau: cách tâm trackLength/2, sau đó cách nhau trackLength
         for (int i = 0; i < tracksBehind; i++)
         {
             float zPos = focusZ - (trackLength * 0.5f) - (i * trackLength);
@@ -114,7 +108,6 @@ public class TracksSpawner : MonoBehaviour
             activeTracks.Insert(0, t); // chèn vào đầu để giữ đúng thứ tự sau -> trước
         }
 
-        // 3. Bật các track phía trước: cách tâm trackLength/2, sau đó cách nhau trackLength
         for (int i = 0; i < tracksAhead; i++)
         {
             float zPos = focusZ + (trackLength * 0.5f) + (i * trackLength);
@@ -129,16 +122,13 @@ public class TracksSpawner : MonoBehaviour
     {
         if (activeTracks.Count == 0) return;
 
-        // Lấy track sau cùng (đầu danh sách)
         GameObject rearTrack = activeTracks[0];
         activeTracks.RemoveAt(0);
 
-        // Đặt nó lên trước track đầu tiên hiện tại (track cuối danh sách), cách trackLength
         GameObject frontTrack = activeTracks[activeTracks.Count - 1];
         float newZ = frontTrack.transform.position.z + trackLength;
         rearTrack.transform.position = new Vector3(0f, 0f, newZ);
 
-        // Đưa vào cuối danh sách vì giờ nó là track mới nhất phía trước
         activeTracks.Add(rearTrack);
     }
 

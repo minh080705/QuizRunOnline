@@ -27,7 +27,6 @@ public class AuthGate : MonoBehaviour
 #endif
         if (IsLoggedIn) return;
 
-        Debug.Log("[AuthGate] Chưa đăng nhập, chuyển về AccountScene.");
         Redirecting = true;
         SceneManager.LoadScene(SceneNames.Account);
     }

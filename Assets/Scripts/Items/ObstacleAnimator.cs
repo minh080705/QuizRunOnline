@@ -20,7 +20,6 @@ public class ObstacleAnimator : MonoBehaviour
     [Tooltip("Tốc độ xoay (độ/giây)")]
     public float rotationSpeed = 90f;
 
-
     [Header("=== BAY LÊN XUỐNG (UP - DOWN) ===")]
     [Tooltip("Bật/tắt hiệu ứng bay lên xuống")]
     public bool enableUpDown = true;
@@ -30,7 +29,6 @@ public class ObstacleAnimator : MonoBehaviour
 
     [Tooltip("Tốc độ dao động lên xuống")]
     public float upDownSpeed = 2f;
-
 
     [Header("=== BAY QUA LẠI (SIDE TO SIDE) ===")]
     [Tooltip("Bật/tắt hiệu ứng bay qua lại")]
@@ -45,7 +43,6 @@ public class ObstacleAnimator : MonoBehaviour
     [Tooltip("Tốc độ dao động qua lại")]
     public float sideToSideSpeed = 1.5f;
 
-
     [Header("=== PHÓNG TO / THU NHỎ (SCALE PULSE) ===")]
     [Tooltip("Bật/tắt hiệu ứng phóng to thu nhỏ")]
     public bool enableScalePulse = true;
@@ -59,16 +56,13 @@ public class ObstacleAnimator : MonoBehaviour
     [Tooltip("Tốc độ phóng to thu nhỏ")]
     public float scaleSpeed = 2f;
 
-
     [Header("=== TÙY CHỌN KHÁC ===")]
     [Tooltip("Dùng thời gian ngẫu nhiên bắt đầu khác nhau giữa các object (tránh các item cùng nhịp)")]
     public bool randomizeStartOffset = true;
 
-    // Lưu vị trí & scale gốc để tính toán dao động quanh nó
     private Vector3 startPosition;
     private Vector3 startScale;
 
-    // Offset thời gian riêng cho mỗi object (nếu bật randomize)
     private float timeOffset;
 
     void Start()
@@ -83,13 +77,11 @@ public class ObstacleAnimator : MonoBehaviour
     {
         float t = Time.time + timeOffset;
 
-        // --- XOAY ---
         if (enableRotation)
         {
             transform.Rotate(rotationAxis.normalized * rotationSpeed * Time.deltaTime, Space.Self);
         }
 
-        // --- TÍNH VỊ TRÍ MỚI (lên xuống + qua lại) ---
         Vector3 newPosition = startPosition;
 
         if (enableUpDown)
@@ -109,10 +101,8 @@ public class ObstacleAnimator : MonoBehaviour
             transform.position = newPosition;
         }
 
-        // --- PHÓNG TO / THU NHỎ ---
         if (enableScalePulse)
         {
-            // Dao động từ 0 -> 1 -> 0 theo hình sin, rồi map sang khoảng [min, max]
             float lerpT = (Mathf.Sin(t * scaleSpeed) + 1f) / 2f;
             float scaleMultiplier = Mathf.Lerp(minScaleMultiplier, maxScaleMultiplier, lerpT);
             transform.localScale = startScale * scaleMultiplier;

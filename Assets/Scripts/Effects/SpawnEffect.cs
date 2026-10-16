@@ -1,12 +1,8 @@
-﻿// dùng để phát các hiệu ứng khi player trả lời đúng hoặc sai câu hỏi
-// và hiệu ứng khi nhặt item / va chạm (PlayAt: nổ một lần tại chỗ, PlayFollowing: đi theo nhân vật)
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+/// <summary>Phát hiệu ứng khi trả lời đúng/sai và khi nhặt item hoặc va chạm (PlayAt: nổ một lần tại chỗ, PlayFollowing: đi theo nhân vật).</summary>
 public class SpawnEffect : MonoBehaviour
 {
-    // =========================================================
-    // SINGLETON
-    // =========================================================
     public static SpawnEffect Instance { get; private set; }
 
     private void Awake()
@@ -14,9 +10,6 @@ public class SpawnEffect : MonoBehaviour
         Instance = this;
     }
 
-    // =========================================================
-    // EFFECT
-    // =========================================================
     [Header("Correct Effect")]
     [SerializeField] private ParticleSystem correctEffect;
     [SerializeField] private ParticleSystem correctEffect2;
@@ -29,10 +22,6 @@ public class SpawnEffect : MonoBehaviour
     [SerializeField] private float heightOffset1 = 2f;
     [SerializeField] private float heightOffset2 = 5f;
 
-    // =========================================================
-    // PUBLIC API - gọi từ ScreenQuestion
-    // =========================================================
-
     /// <summary>
     /// Phát hiệu ứng đúng, tại vị trí phía trước player được truyền vào.
     /// </summary>
@@ -40,7 +29,6 @@ public class SpawnEffect : MonoBehaviour
     {
         if (player == null)
         {
-          
             return;
         }
 
@@ -55,16 +43,11 @@ public class SpawnEffect : MonoBehaviour
     {
         if (player == null)
         {
-            
             return;
         }
 
         SpawnOne(wrongEffect, GetSpawnPosition(player, heightOffset1));
     }
-
-    // =========================================================
-    // INTERNAL
-    // =========================================================
 
     private Vector3 GetSpawnPosition(GameObject player, float heightOffset)
     {
@@ -100,10 +83,6 @@ public class SpawnEffect : MonoBehaviour
         float lifetime = effect.main.duration + effect.main.startLifetime.constantMax;
         Destroy(effect.gameObject, lifetime);
     }
-
-    // =========================================================
-    // HIỆU ỨNG ĐI THEO MỤC TIÊU (nhặt coin / item)
-    // =========================================================
 
     // Pool theo prefab: coin dày (hàng chục đồng mỗi giây) nên tái sử dụng bản sao thay vì Instantiate/Destroy liên tục.
     // Là static nên còn nguyên khi đổi scene; bản sao bị hủy cùng scene sẽ thành null và được bỏ qua khi lấy ra.
