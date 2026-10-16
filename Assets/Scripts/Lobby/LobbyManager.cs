@@ -16,6 +16,10 @@ public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPrefabRef playerDataPrefab;
     public List<SessionInfo> CurrentSessions { get; private set; } = new List<SessionInfo>();
 
+    /// <summary>Bắn khi sảnh sẵn sàng (true: đã vào session lobby, có thể tạo/vào phòng) hoặc không còn sẵn sàng (false).</summary>
+    public static event Action<bool> OnLobbyReadyChanged;
+    public bool IsLobbyReady { get; private set; }
+
     void Awake()
     {
         // LobbyManager sống qua các scene (RaceScene cần Runner). Quay lại LobbyScene mà bản cũ còn thì bỏ bản mới.
@@ -52,17 +56,36 @@ public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
     /// <summary>Tạo runner mới và vào session lobby để nhận danh sách phòng.</summary>
     private async Task ConnectToLobbyAsync()
     {
-        _runner = Instantiate(runnerPrefab);
-        DontDestroyOnLoad(_runner.gameObject);
-        _runner.AddCallbacks(this);
+        SetLobbyReady(false);
 
-        var result = await _runner.JoinSessionLobby(SessionLobby.ClientServer);
+        NetworkRunner runner = Instantiate(runnerPrefab);
+        _runner = runner;
+        DontDestroyOnLoad(runner.gameObject);
+        runner.AddCallbacks(this);
+
+        var result = await runner.JoinSessionLobby(SessionLobby.ClientServer);
         if (!result.Ok)
+        {
             Debug.LogError($"Join Lobby thất bại: {result.ShutdownReason}");
+            return;
+        }
+
+        // Runner có thể đã bị thay hoặc hủy trong lúc chờ (rời phòng, về AccountScene): chỉ báo sẵn sàng nếu vẫn là runner này.
+        if (_runner == runner)
+            SetLobbyReady(true);
+    }
+
+    private void SetLobbyReady(bool ready)
+    {
+        if (IsLobbyReady == ready) return;
+
+        IsLobbyReady = ready;
+        OnLobbyReadyChanged?.Invoke(ready);
     }
 
     private async Task ShutdownRunnerAsync()
     {
+        SetLobbyReady(false);
         if (_runner == null) return;
 
         NetworkRunner old = _runner;
@@ -91,11 +114,20 @@ public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
         Destroy(gameObject);
     }
 
-    // Thêm property public để RaceScenePlayerSpawner lấy runner an toàn hơn FindObjectOfType
     public NetworkRunner Runner => _runner;
+
+    // Vào phòng thất bại: runner không còn đáng tin, tạo runner mới và vào lại sảnh để có thể thử lại.
+    private async Task RecoverLobbyAsync()
+    {
+        await ShutdownRunnerAsync();
+        await ConnectToLobbyAsync();
+    }
 
     public async Task<bool> CreateRoom(string roomName, int maxPlayers)
     {
+        if (_runner == null || !IsLobbyReady) return false;
+
+        SetLobbyReady(false); // chặn bấm lần hai trong lúc đang vào phòng
         var result = await _runner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
@@ -107,6 +139,7 @@ public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
         if (!result.Ok)
         {
             Debug.LogError($"Tạo phòng thất bại: {result.ShutdownReason}");
+            await RecoverLobbyAsync();
             return false;
         }
 
@@ -116,12 +149,13 @@ public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        Debug.Log($"Player {player} đã rời phòng.");
         UI_Notification.Instance?.ShowNetworkMessage("1 đối thủ đã thoát trận đấu!");
-        // Có thể thêm logic: tự động thắng, quay về menu, v.v.
     }
     public async Task<bool> JoinRoom(string roomName)
     {
+        if (_runner == null || !IsLobbyReady) return false;
+
+        SetLobbyReady(false);
         var result = await _runner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
@@ -132,6 +166,7 @@ public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
         if (!result.Ok)
         {
             Debug.LogError($"Join phòng thất bại: {result.ShutdownReason}");
+            await RecoverLobbyAsync();
             return false;
         }
 
@@ -139,15 +174,13 @@ public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
         return true;
     }
 
-    // ĐANG DÙNG - giữ nguyên logic
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        Debug.Log($"[LobbyManager] OnSessionListUpdated, sessions={sessionList.Count}");
         CurrentSessions = sessionList;
         RoomListUI.Instance?.RefreshList(sessionList);
     }
 
-    // Các callback dưới đây KHÔNG dùng ở bước này -> để trống, KHÔNG throw exception
+    // Các callback chưa dùng (để trống).
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
